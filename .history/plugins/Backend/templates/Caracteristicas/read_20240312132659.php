@@ -62,8 +62,8 @@
                                             <td><?=$caracteristica['ativo']?></td>
                                             <td><?=$caracteristica['criado']?></td>
                                             <td><?=$caracteristica['modificado']?></td>
-                                            <td><?=$caracteristica['criadorId']?></td>
-                                            <td><?=$caracteristica['modificadorId']?></td>
+                                            <td><?=$caracteristica['criador_id']?></td>
+                                            <td><?=$caracteristica['modificador_id']?></td>
                                             <td>
                                                 <ul class="d-flex justify-content-center">
                                                     <li class="mr-3"><a href="/src/View/adminCrud/Caracteristicas/update.php?id=<?= $caracteristica['id']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>

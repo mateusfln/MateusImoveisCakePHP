@@ -67,8 +67,8 @@
                                             <td><?=$midia['ativo']?></td>
                                             <td><?=$midia['criado']?></td>
                                             <td><?=$midia['modificado']?></td>
-                                            <td><?=$midia['criadorId']?></td>
-                                            <td><?=$midia['modificadorId']?></td>
+                                            <td><?=$midia['criador_id']?></td>
+                                            <td><?=$midia['modificador_id']?></td>
                                             <td>
                                                 <ul class="d-flex justify-content-center">
                                                     <li class="mr-3"><a href="/src/View/adminCrud/Midias/update.php?id=<?=$midia['id']?>&identificacao=<?=$midia['identificacao']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>

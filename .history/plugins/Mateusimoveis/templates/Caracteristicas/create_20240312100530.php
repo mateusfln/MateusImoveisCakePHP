@@ -22,8 +22,8 @@ if (!empty($_POST)) {
         $caracteristica['nome']($_POST['nome']);
         $caracteristica['ativo'](true);
         $caracteristica['criado']($hoje);
-        $caracteristica['criadorId'](1);
-        $caracteristica['modificadorId'](1);
+        $caracteristica['criador_id'](1);
+        $caracteristica['modificador_id'](1);
         $caracteristica['modificado']($hoje);
         $dbCaracteristicas = new CaracteristicasTable();
         $dbCaracteristicas->create($caracteristica);
@@ -37,8 +37,8 @@ if (!empty($_POST)) {
             $caracteristicasImoveltipos['imovelTipoId']($imovel);
             $caracteristicasImoveltipos['ativo'](true);
             $caracteristicasImoveltipos['criado']($hoje);
-            $caracteristicasImoveltipos['criadorId'](1);
-            $caracteristicasImoveltipos['modificadorId'](1);
+            $caracteristicasImoveltipos['criador_id'](1);
+            $caracteristicasImoveltipos['modificador_id'](1);
             $caracteristicasImoveltipos[Modificado']($hoje);
 
             $dbCaracteristicaImoveltipo = new CaracteristicasImoveltiposTable();

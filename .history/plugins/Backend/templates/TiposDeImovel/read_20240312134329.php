@@ -64,8 +64,8 @@
                                             <td><?=$imoveltipo['Ativo']?></td>
                                             <td><?=$imoveltipo['Criado']?></td>
                                             <td><?=$imoveltipo['Modificado']?></td>
-                                            <td><?=$imoveltipo['CriadorId']?></td>
-                                            <td><?=$imoveltipo['ModificadorId']?></td>
+                                            <td><?=$imoveltipo['criador_id']?></td>
+                                            <td><?=$imoveltipo['modificador_id']?></td>
                                             <td>
                                                 <ul class="d-flex justify-content-center">
                                                     <li class="mr-3"><a href="/src/View/adminCrud/TiposDeImovel/update.php?id=<?=$imoveltipo['id']?>&nome=<?=$imoveltipo['Nome']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>

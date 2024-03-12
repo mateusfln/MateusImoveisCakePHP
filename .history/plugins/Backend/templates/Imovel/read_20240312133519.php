@@ -61,9 +61,9 @@
                                             <th scope="row"><?=$imovel['id']?></th>
                                             <td><?=$imovel['identificacao']?></td>
                                             <td><?=$imovel['matricula']?></td>
-                                            <td><?=$imovel['inscricaoImobiliaria']?></td>
+                                            <td><?=$imovel['inscricao_imobiliaria']?></td>
                                             <td><?=$imovel['logradouro']?></td>
-                                            <td><?=$imovel['numeroLogradouro']?></td>
+                                            <td><?=$imovel['numero_logradouro']?></td>
                                             <td><?=$imovel['rua']?></td>
                                             <td><?=$imovel['bairro']?></td>
                                             <td><?=$imovel['Cidade']?></td>
@@ -77,8 +77,8 @@
                                             <td><?=$imovel['Ativo']?></td>
                                             <td><?=$imovel['Criado']->format('Y-m-d H:i:s')?></td>
                                             <td><?=$imovel['Modificado']->format('Y-m-d H:i:s')?></td>
-                                            <td><?=$imovel['CriadorId']?></td>
-                                            <td><?=$imovel['ModificadorId']?></td>
+                                            <td><?=$imovel['criador_id']?></td>
+                                            <td><?=$imovel['modificador_id']?></td>
                                             
                                             <td>
                                                 <ul class="d-flex justify-content-center">

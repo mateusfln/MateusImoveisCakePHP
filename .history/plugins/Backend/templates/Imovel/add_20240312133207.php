@@ -34,9 +34,9 @@ if(!empty($_POST) && !empty($_POST['negociotipo']) && !empty($_POST['valor']) &&
     $imovel->setImoveltipoId($_POST['imoveltipo']);
     $imovel->setIdentificacao($_POST['Identificacao']);
     $imovel->setMatricula($_POST['Matricula']);
-    $imovel->setInscricaoImobiliaria($_POST['inscricaoImobiliaria']);
+    $imovel->setInscricaoImobiliaria($_POST['inscricao_imobiliaria']);
     $imovel->setLogradouro($_POST['logradouro']);
-    $imovel->setNumeroLogradouro($_POST['NumeroLogradouro']);
+    $imovel->setNumeroLogradouro($_POST['numero_logradouro']);
     $imovel->setRua($_POST['Rua']);
     $imovel->setComplemento($_POST['Complemento']);
     $imovel->setBairro($_POST['Bairro']);

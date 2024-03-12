@@ -62,8 +62,8 @@
                                             <td><?=$negociotipo['ativo']?></td>
                                             <td><?=$negociotipo['criado']?></td>
                                             <td><?=$negociotipo['modificado']?></td>
-                                            <td><?=$negociotipo['criadorId']?></td>
-                                            <td><?=$negociotipo['modificadorId']?></td>
+                                            <td><?=$negociotipo['criador_id']?></td>
+                                            <td><?=$negociotipo['modificador_id']?></td>
                                             <td>
                                                 <ul class="d-flex justify-content-center">
                                                     <li class="mr-3"><a href="/src/View/adminCrud/TiposDeNegocio/update.php?id=<?=$negociotipo['id']?>&nome=<?=$negociotipo['nome']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>

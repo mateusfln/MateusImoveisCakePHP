@@ -67,8 +67,8 @@
                                             <td><?=$pessoa['ativo']?></td>
                                             <td><?=$pessoa['criado']?></td>
                                             <td><?=$pessoa['modificado']?></td>
-                                            <td><?=$pessoa['criadorId']?></td>
-                                            <td><?=$pessoa['modificadorId']?></td>
+                                            <td><?=$pessoa['criador_id']?></td>
+                                            <td><?=$pessoa['modificador_id']?></td>
                                             <td>
                                                 <ul class="d-flex justify-content-center">
                                                     <li class="mr-3"><a href="/src/View/adminCrud/Pessoas/update.php?id=<?=$pessoa['id']?>&nome=<?=$pessoa['nome']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>

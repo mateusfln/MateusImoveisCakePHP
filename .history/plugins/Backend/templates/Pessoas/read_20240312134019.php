@@ -67,8 +67,8 @@
                                             <td><?=$pessoa['Ativo']()?></td>
                                             <td><?=$pessoa['Criado']()->format('Y-m-d H:i:s')?></td>
                                             <td><?=$pessoa['Modificado']()->format('Y-m-d H:i:s')?></td>
-                                            <td><?=$pessoa['CriadorId']()?></td>
-                                            <td><?=$pessoa['ModificadorId']()?></td>
+                                            <td><?=$pessoa['criador_id']()?></td>
+                                            <td><?=$pessoa['modificador_id']()?></td>
                                             <td>
                                                 <ul class="d-flex justify-content-center">
                                                     <li class="mr-3"><a href="/src/View/adminCrud/Pessoas/update.php?id=<?=$pessoa['Id']()?>&nome=<?=$pessoa['Nome']()?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
