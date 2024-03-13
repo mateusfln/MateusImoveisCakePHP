@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 use App\Model\Entity\Pessoa;
+use Cake\ORM\TableRegistry;
 
 /**
  * Pessoas Controller
@@ -32,15 +33,25 @@ class PessoasController extends AppController
     public function add()
     {
         
-        // $Pessoas = $this->Pessoas->newEmptyEntity();
-        // if ($this->request->is('post')) {
-        //     $Pessoas = $this->Pessoas->patchEntity($Pessoas, $this->request->getData());
-        //     if ($this->Pessoas->save($Pessoas)) {
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao salvar o imóvel.'));
-        // }
-        // $this->set('$Pessoas', $Pessoas);
+        if (!empty($_POST['nome']) && !empty($_POST['cpf']) && !empty($_POST['login']) && !empty($_POST['senha']))
+        {
+            $hoje = new \DateTimeImmutable();
+            $tablePessoas = TableRegistry::getTableLocator()->get('Pessoas');
+            
+            $pessoaEntity = $tablePessoas->newEmptyEntity();
+            $pessoaEntity->nome = $_POST['nome'];
+            $pessoaEntity->cpf = $_POST['cpf'];
+            $pessoaEntity->login = $_POST['login'];
+            $pessoaEntity->senha = $_POST['senha'];
+            $pessoaEntity->ativo = true;
+            $pessoaEntity->criado = $hoje;
+            $pessoaEntity->modificado = $hoje;
+            $pessoaEntity->criador_id = 1;
+            $pessoaEntity->modificador_id = 1;
+            $tablePessoas->save($pessoaEntity); 
+            return $this->redirect('admin/pessoas');
+        }
+        
     }
 
     /**
@@ -66,16 +77,29 @@ class PessoasController extends AppController
     public function update()
     {
 
-        // $Pessoas = $this->Pessoas->get($id);
-        // if ($this->request->is(['post', 'put'])) {
-        //     $Pessoas = $this->Pessoas->patchEntity($Pessoas, $this->request->getData());
-        //     if ($this->Pessoas->save($Pessoas)) {
-        //         $this->Flash->success(__('Imóvel atualizado com sucesso.'));
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao atualizar o imóvel.'));
-        // }
-        // $this->set('Pessoas', $Pessoas);
+        if (!empty($_POST['nome']) && !empty($_POST['cpf']) && !empty($_POST['login']) && !empty($_POST['senha']))
+        {
+            $hoje = new \DateTimeImmutable();
+            $tablePessoas = TableRegistry::getTableLocator()->get('Pessoas');
+            
+            $pessoaEntity = $tablePessoas->newEmptyEntity();
+
+            $pessoaEntity->id = $_GET['id'];
+            $pessoaEntity->nome = $_POST['nome'];
+            $pessoaEntity->cpf = $_POST['cpf'];
+            $pessoaEntity->login = $_POST['login'];
+            $pessoaEntity->senha = $_POST['senha'];
+            $pessoaEntity->ativo = 0;
+            if(!empty($_POST['ativo'])){
+                $pessoaEntity->ativo = 1;    
+            }
+            $pessoaEntity->criado = $hoje;
+            $pessoaEntity->modificado = $hoje;
+            $pessoaEntity->criador_id = 1;
+            $pessoaEntity->modificador_id = 1;
+            $tablePessoas->save($pessoaEntity); 
+            return $this->redirect('admin/pessoas');
+        }
     }
    
     /**

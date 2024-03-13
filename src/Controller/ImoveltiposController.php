@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 use App\Model\Entity\Imoveltipo;
+use App\Model\Table\CaracteristicasImoveltiposTable;
+use Cake\ORM\TableRegistry;
 
 /**
  * Imoveltipo Controller
@@ -31,16 +33,10 @@ class ImoveltiposController extends AppController
      */
     public function add()
     {
-        
-        // $Imoveltipo = $this->Imoveltipo->newEmptyEntity();
-        // if ($this->request->is('post')) {
-        //     $Imoveltipo = $this->Imoveltipo->patchEntity($Imoveltipo, $this->request->getData());
-        //     if ($this->Imoveltipo->save($Imoveltipo)) {
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao salvar o imóvel.'));
-        // }
-        // $this->set('$Imoveltipo', $Imoveltipo);
+        if (isset($_POST['nome']))
+        {
+            $this->addRegistro(); 
+        }
     }
 
     /**
@@ -65,17 +61,45 @@ class ImoveltiposController extends AppController
      */
     public function update()
     {
+        if(!empty($_POST['nome'])){
+        $hoje = new \DateTimeImmutable();
+            $tableImoveltipos = TableRegistry::getTableLocator()->get('Imoveltipos');
+            
+            $imoveltipoEntity = $tableImoveltipos->newEmptyEntity();
+            $imoveltipoEntity->id = $_GET['id'];
+            $imoveltipoEntity->nome = $_POST['nome'];
+            $imoveltipoEntity->ativo = 0;
+            if(!empty($_POST['ativo'])){
+                $imoveltipoEntity->ativo = 1;    
+            }
+            $imoveltipoEntity->criado = $hoje;
+            $imoveltipoEntity->modificado = $hoje;
+            $imoveltipoEntity->criador_id = 1;
+            $imoveltipoEntity->modificador_id = 1;
+            $tableImoveltipos->save($imoveltipoEntity);
 
-        // $Imoveltipo = $this->Imoveltipo->get($id);
-        // if ($this->request->is(['post', 'put'])) {
-        //     $Imoveltipo = $this->Imoveltipo->patchEntity($Imoveltipo, $this->request->getData());
-        //     if ($this->Imoveltipo->save($Imoveltipo)) {
-        //         $this->Flash->success(__('Imóvel atualizado com sucesso.'));
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao atualizar o imóvel.'));
-        // }
-        // $this->set('Imoveltipo', $Imoveltipo);
+            $caracteristicasImoveltiposTable = new CaracteristicasImoveltiposTable();
+            $caracteristicasImoveltiposTable->deleteAll(['imoveltipo_id' => $imoveltipoEntity->id]);
+
+            foreach ($_POST['caracteristicas'] as $caracteristica) {
+
+                $tableCaracteristicaImoveltipo = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
+                $caracteristicasImoveltipos = $tableCaracteristicaImoveltipo->newEmptyEntity();
+    
+                $caracteristicasImoveltipos->imoveltipo_id = $imoveltipoEntity->id;
+                $caracteristicasImoveltipos->caracteristica_id = $caracteristica;
+                $caracteristicasImoveltipos->ativo = true;
+                $caracteristicasImoveltipos->criado = $hoje;
+                $caracteristicasImoveltipos->modificado = $hoje;
+                $caracteristicasImoveltipos->criador_id = 1;
+                $caracteristicasImoveltipos->modificador_id = 1;
+
+                $tableCaracteristicaImoveltipo->save($caracteristicasImoveltipos);
+            }
+            return $this->redirect('admin/imoveltipos');
+        }
+
+        
     }
    
     /**
@@ -96,6 +120,38 @@ class ImoveltiposController extends AppController
             $this->Flash->error(__('Erro ao excluir o imóvel.'));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function addRegistro()
+    {
+            $hoje = new \DateTimeImmutable();
+            $tableImoveltipos = TableRegistry::getTableLocator()->get('Imoveltipos');
+            
+            $imoveltipoEntity = $tableImoveltipos->newEmptyEntity();
+            $imoveltipoEntity->nome = $_POST['nome'];
+            $imoveltipoEntity->ativo = true;
+            $imoveltipoEntity->criado = $hoje;
+            $imoveltipoEntity->modificado = $hoje;
+            $imoveltipoEntity->criador_id = 1;
+            $imoveltipoEntity->modificador_id = 1;
+            $tableImoveltipos->save($imoveltipoEntity);
+
+            foreach ($_POST['caracteristicas'] as $caracteristica) {
+
+                $tableCaracteristicaImoveltipo = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
+                $caracteristicasImoveltipos = $tableCaracteristicaImoveltipo->newEmptyEntity();
+    
+                $caracteristicasImoveltipos->imoveltipo_id = $imoveltipoEntity->id;
+                $caracteristicasImoveltipos->caracteristica_id = $caracteristica;
+                $caracteristicasImoveltipos->ativo = true;
+                $caracteristicasImoveltipos->criado = $hoje;
+                $caracteristicasImoveltipos->modificado = $hoje;
+                $caracteristicasImoveltipos->criador_id = 1;
+                $caracteristicasImoveltipos->modificador_id = 1;
+
+                $tableCaracteristicaImoveltipo->save($caracteristicasImoveltipos);
+            }
+            return $this->redirect('admin/imoveltipos');
     }
     
 }

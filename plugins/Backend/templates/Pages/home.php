@@ -1,4 +1,34 @@
-<!--==================================*
+<?php
+use App\Model\Table\ImoveisTable;
+$campos = array(
+    'Id',
+    'Identificacao',
+    'Matricula',
+    'inscricaoImobiliaria',
+    'logradouro',
+    'NumeroLogradouro',
+    'Rua',
+    'Bairro',
+    'Cidade',
+    'Estado',
+    'Cep',
+    'Ibge',
+    'MetrosQuadrados',
+    'Quartos',
+    'Banheiros',
+    'Garagem',
+    'Ativo',
+    'Criado',
+    'Modificado',
+    'CriadorId',
+    'ModificadorId');
+
+$imoveis = new ImoveisTable();
+$imoveis = $imoveis->find();
+
+?>
+ 
+ <!--==================================*
                    Main Section
         *====================================-->
         <div class="main-content-inner">
@@ -8,11 +38,9 @@
                         <div class="d-flex align-items-center dashboard-header flex-wrap mb-3 mb-sm-0">
                             <h5 class="mr-4 mb-0 font-weight-bold">Dashboard</h5>
                             <div class="d-flex align-items-baseline dashboard-breadcrumb">
-                                <p class="text-muted mb-0 mr-1 hover-cursor">App</p>
+                                <p class="text-muted mb-0 mr-1 hover-cursor">Imóveis</p>
                                 <i class="bi bi-chevron-right"></i>
-                                <p class="text-muted mb-0 mr-1 hover-cursor">Dashboard</p>
-                                <i class="bi bi-chevron-right"></i>
-                                <p class="text-muted mb-0 hover-cursor">Analytics</p>
+                                <p class="text-muted mb-0 mr-1 hover-cursor">Read</p>
                             </div>
                         </div>
                     </div>
@@ -24,119 +52,76 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card_title">
-                                Tabela de Imóveis <a href="/imovel/add"><button type="button" class="btn btn-inverse-success ml-3"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button></a>
+                                Tabela de Imóveis <a href="imovel/add"><button type="button" class="btn btn-inverse-success ml-3"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button></a>
                             </h4>
                             <div class="single-table">
                                 <div class="table-responsive">
                                     <table class="table table-hover progress-table text-center">
                                         <thead class="text-uppercase">
                                         <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Identificação</th>
-                                            <th scope="col">Matricula</th>
-                                            <th scope="col">Inscrição Imobiliária</th>
-                                            <th scope="col">Logradouro</th>
-                                            <th scope="col">Numero Logradouro</th>
-                                            <th scope="col">Rua</th>
-                                            <th scope="col">Bairro</th>
-                                            <th scope="col">Cidade</th>
-                                            <th scope="col">Estado</th>
-                                            <th scope="col">Cep</th>
-                                            <th scope="col">Ibge</th>
-                                            <th scope="col">Ativo</th>
-                                            <th scope="col">Criado</th>
-                                            <th scope="col">Modificado</th>
-                                            <th scope="col">Criador ID</th>
-                                            <th scope="col">Modificador ID</th>
+                                        <?php foreach($campos as $campo):?>
+
+                                            <th scope="col">
+                                                <div class="d-flex justify-content-center align-items-center">
+                                                    <strong>
+                                                        <?=$campo?> 
+                                                    </strong>
+                                                    <?php
+                                                    $campo = strtolower($campo);
+                                                    $campo = str_replace(" ", "_", $campo);
+                                                    ?>
+                                                    <?php if((empty($_GET['direction']))):?>
+                                                        <a class="ml-1" href="imovel/read?sort=<?=$campo?>&direction=ASC"><i class="bi bi-filter"></i></a>
+                                                    <?php else:?>
+                                                    <?php if(($_GET['direction']) == 'DESC'):?>
+                                                        <a class="ml-1" href="imovel/read?sort=<?=$campo?>&direction=ASC"><i class="bi bi-filter"></i></a>
+                                                    <?php else:?>
+                                                        <a class="ml-1" href="imovel/read?sort=<?=$campo?>&direction=DESC"><i class="bi bi-filter"></i></a>
+                                                    <?php endif;?>
+                                                    <?php endif;?>
+                                                </div>
+                                            </th>
+                                            <?php endforeach;?>
                                             <th scope="col">Actions</th>
                                         </tr>
                                         </thead>
                                         <tbody>
+                                    <?php foreach($imoveis as $imovel):?>
                                         <tr>
-                                        <th scope="row">28</th>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>AC</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>2024-03-12 14:14:03</td>
-                                            <td>2024-03-12 14:14:03</td>
-                                            <td>1</td>
-                                            <td>1</td>
+                                            <td><?=$imovel['id']?></td>
+                                            <td><?=$imovel['identificacao']?></td>
+                                            <td><?=$imovel['matricula']?></td>
+                                            <td><?=$imovel['inscricao_imobiliaria']?></td>
+                                            <td><?=$imovel['logradouro']?></td>
+                                            <td><?=$imovel['numero_logradouro']?></td>
+                                            <td><?=$imovel['rua']?></td>
+                                            <td><?=$imovel['bairro']?></td>
+                                            <td><?=$imovel['cidade']?></td>
+                                            <td><?=$imovel['estado']?></td>
+                                            <td><?=$imovel['cep']?></td>
+                                            <td><?=$imovel['ibge']?></td>
+                                            <td><?=$imovel['metros_quadrados']?></td>
+                                            <td><?=$imovel['quartos']?></td>
+                                            <td><?=$imovel['banheiros']?></td>
+                                            <td><?=$imovel['garagem']?></td>
+                                            <td><?=$imovel['ativo']?></td>
+                                            <td><?=$imovel['criado']?></td>
+                                            <td><?=$imovel['modificado']?></td>
+                                            <td><?=$imovel['criador_id']?></td>
+                                            <td><?=$imovel['modificador_id']?></td>
+                                            
                                             <td>
                                                 <ul class="d-flex justify-content-center">
-                                                    <li class="mr-3"><a href="/imovel/update?id=28&identificacao=1" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
+                                                    <li class="mr-3"><a href="imovel/update?id=<?=$imovel['id']?>&identificacao=<?=$imovel['identificacao']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
                                                     <form method="POST">
-                                                        <input type="hidden" name="delete_id" value="28">
+                                                        <input type="hidden" name="delete_id" value="<?=$imovel['id']?>">
                                                         <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>
                                                     </form>
                                                 </ul>
                                             </td>
                                         </tr>
-                                        <tr>
-                                        <th scope="row">29</th>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>AC</td>
-                                            <td>2</td>
-                                            <td>2</td>
-                                            <td>1</td>
-                                            <td>2024-03-12 14:14:03</td>
-                                            <td>2024-03-12 14:14:03</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>
-                                                <ul class="d-flex justify-content-center">
-                                                    <li class="mr-3"><a href="/imovel/update?id=29&identificacao=2" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
-                                                    <form method="POST">
-                                                        <input type="hidden" name="delete_id" value="29">
-                                                        <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>
-                                                    </form>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                        <th scope="row">30</th>
-                                            <td>casa de teste</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>campolino alves</td>
-                                            <td>300</td>
-                                            <td>campolino alves</td>
-                                            <td>capoeiras</td>
-                                            <td>florianopolis</td>
-                                            <td>SC</td>
-                                            <td>88085110</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>2024-03-12 14:14:03</td>
-                                            <td>2024-03-12 14:14:03</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>
-                                                <ul class="d-flex justify-content-center">
-                                                    <li class="mr-3"><a href="/imovel/update?id=30&identificacao=casa de teste" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
-                                                    <form method="POST">
-                                                        <input type="hidden" name="delete_id" value="30">
-                                                        <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>
-                                                    </form>
-                                                </ul>
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                    <?php endforeach;?>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>

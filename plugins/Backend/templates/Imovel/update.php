@@ -1,20 +1,35 @@
 
 <?php
-use App\Model\Table\CaracteristicasImoveltiposTable;
 use App\Model\Table\CaracteristicasTable;
 use App\Model\Table\ImoveltiposTable;
 use App\Model\Table\NegociotiposTable;
+use Cake\ORM\TableRegistry;
 $caracteristicasDAO = new CaracteristicasTable();
 $caracteristicas = $caracteristicasDAO->find();
 
-$caracteristicasImoveltiposDao = new CaracteristicasImoveltiposTable();
-$caracteristicasImoveltipos = $caracteristicasImoveltiposDao->find();
+$caracteristicasImoveltiposTable = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
+$caracteristicasImoveltipos = $caracteristicasImoveltiposTable->find()->where(['CaracteristicasImoveltipos.caracteristica_id =' => $_GET['id']]);
 
 $imoveltiposDAO = new ImoveltiposTable();
 $imoveltipos = $imoveltiposDAO->find();
 
+//dd($imoveltipos);
+
 $negociotipos = new NegociotiposTable();
 $negociotipos = $negociotipos->find();
+
+$imovelNegociostiposTable = TableRegistry::getTableLocator()->get('ImoveisNegociotipos');
+$imovelNegociostipos = $imovelNegociostiposTable->find()->where(['ImoveisNegociotipos.imoveltipo_id =' => $_GET['id']]);
+
+$imovelTable = TableRegistry::getTableLocator()->get('Imoveis');
+$imovel = $imovelTable->get($_GET['id']);
+
+$arrCaracteristicas = [];
+
+foreach ($caracteristicasImoveltipos as $caracteristicas) {
+    $arrCaracteristicas[] = $caracteristicas->imoveltipo_id;
+}
+
 
 ?>
         <!--==================================*
@@ -44,7 +59,7 @@ $negociotipos = $negociotipos->find();
                                 <div class="card-body">
                                 
 
-                                    <form method="POST">
+                                    <?=$this->Form->create(null, ['type' => 'file', 'method' => 'post'])?>
                                         <div class="card">
                                         <div class="col-12 d-flex">
                                                 <div class="col-6 card">
@@ -138,7 +153,7 @@ $negociotipos = $negociotipos->find();
                                                             <div class="form-group">
                                                             <select class="form-control" name='imoveltipo' id='imoveltipo'>
                                                                 <?php foreach($imoveltipos as $imoveltipo):?>
-                                                                <option value="<?=$imoveltipo['id']?>" <?= $imovel->imovelTipos['id'] == $imoveltipo['id']?  'selected="selected"': '' ?> id="<?=$imoveltipo['nome']?>"><?=$imoveltipo['nome']?></option>
+                                                                <option value="<?=$imoveltipo['id']?>" <?= $imoveltipo['id'] == $imoveltipo['id']?  'selected="selected"': '' ?> id="<?=$imoveltipo['nome']?>"><?=$imoveltipo['nome']?></option>
                                                                 <label for="<?=$imoveltipo['nome']?>" class="col-form-label"><?=$imoveltipo['nome']?></label>
                                                                 <?php endforeach;?>
                                                                 </select>
@@ -147,7 +162,7 @@ $negociotipos = $negociotipos->find();
                                                             <div class="form-group">
                                                             <select class="form-control" name='negociotipo'>
                                                                 <?php foreach($negociotipos as $negociotipo):?>
-                                                                <option value="<?=$negociotipo['id']?>" <?= $imovel->negocioTipos['id'] == $negociotipo['id']?  'selected="selected"': '' ?> id="<?=$negociotipo['nome']?>"><?=$negociotipo['nome']?></option>
+                                                                <option value="<?=$negociotipo['id']?>" <?= $negociotipo['id'] == $negociotipo['id']?  'selected="selected"': '' ?> id="<?=$negociotipo['nome']?>"><?=$negociotipo['nome']?></option>
                                                                 <label for="<?=$negociotipo['nome']?>" class="col-form-label"><?=$negociotipo['nome']?></label>
                                                                 <?php endforeach;?>
                                                                 </select>
@@ -157,7 +172,7 @@ $negociotipos = $negociotipos->find();
                                                             
                                                                 <?php foreach($caracteristicas as $caracteristica):?>
                                                                 <div>
-                                                                <input type="checkbox" name="caracteristicas[]" id="<?=$caracteristica['id']?>" value="<?=$caracteristica['id']?>" <?= in_array($caracteristica['id'], $arrImoveltipos) ? ' checked="checked"' : '' ?>>
+                                                                <input type="checkbox" name="caracteristicas[]" id="<?=$caracteristica['id']?>" value="<?=$caracteristica['id']?>" <?= in_array($caracteristica['id'], $arrCaracteristicas) ? ' checked="checked"' : '' ?>>
                                                                 <label for="<?=$caracteristica['id']?>" class="col-form-label"><?=$caracteristica['nome']?></label>
                                                                 <br>
                                                                 </div>
@@ -165,7 +180,14 @@ $negociotipos = $negociotipos->find();
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="example-text-input" class="col-form-label">Valor</label>
-                                                                <input class="form-control" required type="number" name="valor" value="<?=$imovelNegociostipos['Valor']?>">
+                                                                <input class="form-control" required type="number" name="valor" value="">
+                                                            </div>
+                                                            <label for="example-text-input" class="col-form-label">Midias</label>
+
+                                                            <div class="input-group mb-3">
+                                                                <div class="custom-file">
+                                                                    <input multiple type="file" name="arquivo[]">
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -173,7 +195,7 @@ $negociotipos = $negociotipos->find();
                                                 <button class="btn btn-inverse-success" type="submit"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button>
                                             </div>
                                         </div>
-                                    </form>
+                                    <?=$this->Form->end()?>
                                 </div>
                             </div>
                         </div>

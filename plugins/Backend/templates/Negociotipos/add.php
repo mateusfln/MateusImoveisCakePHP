@@ -25,16 +25,15 @@
                     <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form method="POST">
+                                    <?= $this->Form->create(null, ['method' => 'post'])?>
                                         <h4 class="card_title">Cadastro de Tipos de Negócios</h4>
                                         <div class="form-group">
-                                            <label for="example-text-input" class="col-form-label">Nome</label>
-                                            <input class="form-control" required type="text"name="nome">
+                                        <?= $this->Form->control('nome', ['label' => 'Nome', 'type' => 'text', 'required' => true, 'class' => 'form-control']) ?>
                                         </div>
                                         <div class="form-group">
                                         <button class="btn btn-inverse-success" type="submit"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button>
                                         </div>
-                                    </form>
+                                    <?= $this->Form->end()?>
                                 </div>
                             </div>
                         </div>

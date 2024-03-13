@@ -112,7 +112,7 @@ $imoveis = $imoveis->find();
                                             
                                             <td>
                                                 <ul class="d-flex justify-content-center">
-                                                    <li class="mr-3"><a href="imovel/update?id=<?=$imovel['id']?>&identificacao=<?=$imovel['identificacao']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
+                                                    <li class="mr-3"><a href="imovel/update?id=<?=$imovel['id']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
                                                     <form method="POST">
                                                         <input type="hidden" name="delete_id" value="<?=$imovel['id']?>">
                                                         <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>

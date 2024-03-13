@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 use App\Model\Entity\Midia;
+use App\Model\Table\MidiasTable;
+use Cake\ORM\TableRegistry;
 
 /**
  * Midias Controller
@@ -31,16 +33,17 @@ class MidiasController extends AppController
      */
     public function add()
     {
-        
-        // $Midia = $this->Midia->newEmptyEntity();
-        // if ($this->request->is('post')) {
-        //     $Midia = $this->Midia->patchEntity($Midia, $this->request->getData());
-        //     if ($this->Midia->save($Midia)) {
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao salvar o imóvel.'));
-        // }
-        // $this->set('$Midia', $Midia);
+
+        if (isset($_FILES['arquivo']) && isset($_POST['imovel_id'])){
+            $id = $_POST['imovel_id'];
+            $arquivo = $_FILES['arquivo'];
+    
+            foreach($arquivo['name'] as $index => $arq){
+    
+                $this->enviarArquivos($arquivo['error'][$index], $arquivo['size'][$index], $arquivo['name'][$index], $arquivo['tmp_name'][$index], $id);
+            }
+            return $this->redirect('admin/midias');
+        }
     }
 
     /**
@@ -65,17 +68,29 @@ class MidiasController extends AppController
      */
     public function update()
     {
-
-        // $Midia = $this->Midia->get($id);
-        // if ($this->request->is(['post', 'put'])) {
-        //     $Midia = $this->Midia->patchEntity($Midia, $this->request->getData());
-        //     if ($this->Midia->save($Midia)) {
-        //         $this->Flash->success(__('Imóvel atualizado com sucesso.'));
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao atualizar o imóvel.'));
-        // }
-        // $this->set('Midia', $Midia);
+        if(isset($_POST['imovel_id'])){
+        $hoje = new \DateTimeImmutable();
+            $midiaTable = TableRegistry::getTableLocator()->get('Midias');
+            
+            $midiaEntity = $midiaTable->newEmptyEntity();
+        
+            $midiaEntity->id = $_GET['id'];
+            $midiaEntity->imovel_id = $_POST['imovel_id'];
+            $midiaEntity->capa = 0;
+            if(!empty($_POST['capa'])){
+                $midiaEntity->capa = 1;    
+            }
+            $midiaEntity->ativo = 0;
+            if(!empty($_POST['ativo'])){
+                $midiaEntity->ativo = 1;    
+            }
+            $midiaEntity->criado = $hoje;
+            $midiaEntity->criador_id = 1;
+            $midiaEntity->modificador_id = 1;
+            $midiaEntity->modificado = $hoje;
+            $midiaTable->save($midiaEntity);
+            return $this->redirect('admin/midias');
+        }
     }
    
     /**
@@ -97,5 +112,48 @@ class MidiasController extends AppController
         }
         return $this->redirect(['action' => 'index']);
     }
-    
+
+    public function enviarArquivos($error, $size, $name, $tmp_name, $id){
+
+        if($error){
+            echo('Falha ao enviar o arquivo');
+        }
+
+        if($size > 2097152){
+            echo('Arquivo maior que o limite máximo de tamanho (2Mb)');
+        }
+
+        $pasta = "C:/wamp64/www/micake/html/plugins/Frontend/webroot/images/midiasImoveis/";
+        
+        $nomeDoArquivo = $name;
+        $nomeDoArquivo = uniqid();
+        $extensao = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+        $path = $pasta.$nomeDoArquivo.".".$extensao;
+        $caminho = "/Frontend/images/midiasImoveis/".$nomeDoArquivo.'.'.$extensao;
+        $sucesso = move_uploaded_file($tmp_name, $path);
+        
+        if($extensao != 'jpg' && $extensao != 'png' ){
+            header('Location: https://micake.localadmin/midias/add?erro=tipo de midia não suportado, favor inserir uma midia com a extensão PNG ou JPG.');
+            exit;
+        }
+        if($sucesso){
+            $hoje = new \DateTimeImmutable();
+            $midiaTable = TableRegistry::getTableLocator()->get('Midias');
+            
+            $midiaEntity = $midiaTable->newEmptyEntity();
+        
+            $midiaEntity->imovel_id = $id;
+            $midiaEntity->identificacao = $nomeDoArquivo;
+            $midiaEntity->nome_disco = $caminho;
+            $midiaEntity->capa = true;
+            $midiaEntity->ativo = true;
+            $midiaEntity->criado = $hoje;
+            $midiaEntity->criador_id = 1;
+            $midiaEntity->modificador_id = 1;
+            $midiaEntity->modificado = $hoje;
+            $midiaTable->save($midiaEntity);
+        }else{
+            return false;
+        }
+    }    
 }

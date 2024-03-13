@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 use App\Model\Entity\Caracteristica;
+use App\Model\Table\CaracteristicasImoveltiposTable;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -37,7 +38,7 @@ class CaracteristicasController extends AppController
         {
             $this->addRegistro(); 
         }
-        return $this->redirect('admin/caracteristicas');
+        
     }
 
     /**
@@ -62,17 +63,46 @@ class CaracteristicasController extends AppController
      */
     public function update()
     {
+        if(!empty($_POST['nome'])){
 
-        // $caracteristica = $this->Caracteristica->get($id);
-        // if ($this->request->is(['post', 'put'])) {
-        //     $caracteristica = $this->Caracteristica->patchEntity($caracteristica, $this->request->getData());
-        //     if ($this->Caracteristica->save($caracteristica)) {
-        //         $this->Flash->success(__('Imóvel atualizado com sucesso.'));
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao atualizar o imóvel.'));
-        // }
-        // $this->set('caracteristica', $caracteristica);
+        
+            $hoje = new \DateTimeImmutable();
+            $tableCaracteristicas = TableRegistry::getTableLocator()->get('Caracteristicas');
+            
+            $caracteristicaEntity = $tableCaracteristicas->newEmptyEntity();
+            $caracteristicaEntity->id = $_GET['id'];
+            $caracteristicaEntity->nome = $_POST['nome'];
+            $caracteristicaEntity->ativo = 0;
+            if(!empty($_POST['ativo'])){
+                $caracteristicaEntity->ativo = 1;    
+            }
+            $caracteristicaEntity->criado = $hoje;
+            $caracteristicaEntity->modificado = $hoje;
+            $caracteristicaEntity->criador_id = 1;
+            $caracteristicaEntity->modificador_id = 1;
+            $tableCaracteristicas->save($caracteristicaEntity);
+
+
+             $caracteristicasImoveltiposTable = new CaracteristicasImoveltiposTable();
+             $caracteristicasImoveltiposTable->deleteAll(['caracteristica_id' => $caracteristicaEntity->id]);
+
+            foreach ($_POST['imoveltipos'] as $imovel) {
+
+                $tableCaracteristicaImoveltipo = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
+                $caracteristicasImoveltipos = $tableCaracteristicaImoveltipo->newEmptyEntity();
+    
+                $caracteristicasImoveltipos->caracteristica_id = $caracteristicaEntity->id;
+                $caracteristicasImoveltipos->imoveltipo_id = $imovel;
+                $caracteristicasImoveltipos->ativo = true;
+                $caracteristicasImoveltipos->criado = $hoje;
+                $caracteristicasImoveltipos->modificado = $hoje;
+                $caracteristicasImoveltipos->criador_id = 1;
+                $caracteristicasImoveltipos->modificador_id = 1;
+
+                $tableCaracteristicaImoveltipo->save($caracteristicasImoveltipos);
+            }
+            return $this->redirect('admin/caracteristicas');
+        }
     }
    
     /**
@@ -85,21 +115,20 @@ class CaracteristicasController extends AppController
     public function delete(int $id)
     {
 
-        $this->request->allowMethod(['post', 'delete']);
-        $caracteristica = $this->Caracteristica->get($id);
-        if ($this->Caracteristica->delete($caracteristica)) {
-            $this->Flash->success(__('Imóvel excluído com sucesso.'));
-        } else {
-            $this->Flash->error(__('Erro ao excluir o imóvel.'));
-        }
-        return $this->redirect(['action' => 'index']);
+        // if (isset($_POST['delete_id']))
+        // {
+        //     $entity = $this->Caracteristica->get($id);
+        //     $this->Caracteristica->delete($entity); 
+        // }
+        // return $this->redirect('admin/caracteristicas');
+        
     }
     
     /**
      * método que fornece a lógica de adição de um novo registro de caracteristicas
      * 
      */
-    public function addRegistro() : void
+    public function addRegistro()
     {
             $hoje = new \DateTimeImmutable();
             $tableCaracteristicas = TableRegistry::getTableLocator()->get('Caracteristicas');
@@ -128,5 +157,6 @@ class CaracteristicasController extends AppController
 
                 $tableCaracteristicaImoveltipo->save($caracteristicasImoveltipos);
             }
+            return $this->redirect('admin/caracteristicas');
     }
 }

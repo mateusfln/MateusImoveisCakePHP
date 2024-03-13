@@ -1,7 +1,21 @@
 <?php
+use Cake\ORM\TableRegistry;
 use App\Model\Table\CaracteristicasTable;
 $caracteristicasDAO = new CaracteristicasTable();
 $caracteristicas = $caracteristicasDAO->find();
+
+
+$caracteristicasImoveltiposTable = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
+$caracteristicasImoveltipos = $caracteristicasImoveltiposTable->find()->where(['CaracteristicasImoveltipos.imoveltipo_id =' => $_GET['id']]);
+
+ $arrImoveltipos = [];
+
+foreach ($caracteristicasImoveltipos as $imoveltipos) {
+    $arrImoveltipos[] = $imoveltipos->caracteristica_id;
+}
+
+$imoveltiposTable = TableRegistry::getTableLocator()->get('Imoveltipos');
+$imoveltipo = $imoveltiposTable->get($_GET['id']);
 ?>
 <!--==================================*
                    Main Section
@@ -24,7 +38,7 @@ $caracteristicas = $caracteristicasDAO->find();
                 <div class="row">
                     <!-- Progress Table start -->
                     <div class="col-12 mt-4">
-                        <form action="" method="post">
+                        <?= $this->Form->create(null, ['type' => 'post'])?>
                             <div class="card">
                                 <div class="col-12 d-flex">
                                     <div class="col-6 card">
@@ -61,9 +75,8 @@ $caracteristicas = $caracteristicasDAO->find();
                                 </div>
                                 <button class="btn btn-inverse-success" type="submit"><i
                                         class="bi bi-plus-lg mr-1"></i>Adicionar</button>
-                                <form action="" method="post">
                             </div>
-                        </form>
+                        <?= $this->Form->end()?>
                     </div>
                 </div>
                 <!-- Progress Table end -->

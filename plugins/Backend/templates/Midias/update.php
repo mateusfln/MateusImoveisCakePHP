@@ -1,4 +1,12 @@
+<?php 
+use Cake\ORM\TableRegistry;
+$midiasTable = TableRegistry::getTableLocator()->get('Midias');
+$midia = $midiasTable->get($_GET['id']);
 
+use App\Model\Table\ImoveisTable;
+$imoveis = new ImoveisTable();
+$imoveis = $imoveis->find();
+?>
 
         <!--==================================*
                    Main Section
@@ -25,15 +33,26 @@
                     <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form method="POST">
-                                        <h4 class="card_title">Editar <?=$_GET['identificacao']?></h4>
+                                    <?= $this->Form->create(null, ['type' => 'post'])?>
+                                        <h4 class="card_title">Editar <?=$midia['identificacao']?></h4>
+                                        <div class="form-group">
+                                            <label class="col-form-label">ID do Imovel</label>
+                                            <select class="form-control" name='imovel_id'>
+                                                <?php foreach ($imoveis as $imovel):?>
+                                                    <option value="<?=$imovel['id']?>"/><?=$imovel['identificacao']?></option>
+                                                <?php endforeach;?>
+                                            </select>
+                                            <?php if (isset($_GET['erro'])):?>
+                                            <p style="color: red"><?=$_GET['erro']?></p>
+                                        <?php endif;?>
+                                        </div>
                                         <div class="form-group">
                                             <label for="example-text-input" class="col-form-label">identificacao</label>
-                                            <input class="form-control" required type="text"name="identificacao" value="<?= $midia['identificacao']?>">
+                                            <input class="form-control" disabled required type="text"name="identificacao" value="<?= $midia['identificacao']?>">
                                         </div>
                                         <div class="form-group">
                                             <label for="example-text-input" class="col-form-label">Nome Disco</label>
-                                            <input class="form-control" required type="text"name="nome_disco" value="<?= $midia['nomeDisco']?>">
+                                            <input class="form-control" disabled required type="text"name="nome_disco" value="<?= $midia['nome_disco']?>">
                                         </div>
                                         <div class="form-group">
                                             <label for="example-text-input" class="col-form-label">Capa</label>
@@ -46,7 +65,7 @@
                                         <div class="form-group">
                                         <button class="btn btn-inverse-success" type="submit"><i class="bi bi-plus-lg mr-1"></i>Editar</button>
                                         </div>
-                                    </form>
+                                    <?= $this->Form->end()?>
                                 </div>
                             </div>
                         </div>

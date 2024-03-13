@@ -28,7 +28,7 @@ $imoveis = $imoveis->find();
                     <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form enctype="multipart/form-data" method="POST">
+                                    <?= $this->Form->create(null, ['type' => 'file', 'method' => 'post']); ?>
                                         <h4 class="card_title">Cadastro de Mídias</h4>
                                         <div class="form-group">
                                             <label class="col-form-label">ID do Imovel</label>

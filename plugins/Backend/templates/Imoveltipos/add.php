@@ -28,36 +28,37 @@ $caracteristicas = $caracteristicas->find();
                     <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                <form method="POST">
+                                
+                <?= $this->Form->create(null, ['type' => 'post']) ?>
+
                     <div class="card">
                     <div class="col-12 d-flex">
-                            <div class="col-6 card">
-                                <div class="card-body">
-                                        <h4 class="card_title">Cadastro de Tipos de Imóvel</h4>
-                                        <div class="form-group">
-                                            <label for="example-text-input" class="col-form-label">Nome</label>
-                                            <input class="form-control" required type="text"name="nome">
-                                        </div>
-                                </div>
-                            </div>
-                            <div class="col-6 card">
-                                <div class="card-body">
-                                        <h4 class="card_title">Caracteristicas deste imovel:</h4>
-                                        <div class="form-group">
-                                            <?php foreach($caracteristicas as $caracteristica):?>
-                                            <?php $nomePost = str_replace(' ', '_', $caracteristica['nome']); ?>
-                                            <input type="checkbox" name="caracteristicas[]" id="<?=$nomePost?>" value="<?=$caracteristica['id']?>">
-                                            <label for="<?=$nomePost?>" class="col-form-label"><?=$caracteristica['nome']?></label>
-                                            <br>
-                                            <?php endforeach;?>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="btn btn-inverse-success" type="submit"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button>
+                        <div class="col-6 card">
+                        <div class="card-body">
+                            <h4 class="card_title">Cadastro de Tipo de Imóvel</h4>
+                            <?= $this->Form->control('nome', ['label' => 'Nome', 'type' => 'text', 'required' => true, 'class' => 'form-control']) ?>
+                        </div>
+                        </div>
+                        <div class="col-6 card">
+                        <div class="card-body">
+                            <h4 class="card_title">Caracteristicas deste imovel:</h4>
+                            <?php foreach ($caracteristicas as $caracteristica): ?>
+                            <?php $nomePost = str_replace(' ', '_', $caracteristica['nome']); ?>
+                            <?= $this->Form->control('caracteristicas[]', [
+                                'type' => 'checkbox',
+                                'id' => $nomePost,
+                                'value' => $caracteristica['id'],
+                                'label' => $caracteristica['nome'],
+                                'class' => 'col-form-label'
+                            ]) ?>
+                            <?php endforeach; ?>
+                        </div>
                         </div>
                     </div>
-                </form>
+                    <button class="btn btn-inverse-success" type="submit"><i class="bi bi-plus-lg mr-1"></i> Adicionar</button>
+                    </div>
+
+                    <?= $this->Form->end() ?>
                                 </div>
                             </div>
                         </div>

@@ -29,7 +29,7 @@ $negociosTipos = $negociosTipos->find();
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card_title">
-                                Tabela de Tipos de Negócio <a href="tiposDeNegocio/add"><button type="button" class="btn btn-inverse-success ml-3"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button></a>
+                                Tabela de Tipos de Negócio <a href="Negociotipos/add"><button type="button" class="btn btn-inverse-success ml-3"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button></a>
                             </h4>
                             <div class="single-table">
                                 <div class="table-responsive">
@@ -47,12 +47,12 @@ $negociosTipos = $negociosTipos->find();
                                                     $campo = str_replace(" ", "_", $campo);
                                                     ?>
                                                     <?php if((empty($_GET['direction']))):?>
-                                                        <a class="ml-1" href="tiposDeNegocio/read?sort=<?=$campo?>&direction=ASC"><i class="bi bi-filter"></i></a>
+                                                        <a class="ml-1" href="Negociotipos/read?sort=<?=$campo?>&direction=ASC"><i class="bi bi-filter"></i></a>
                                                     <?php else:?>
                                                     <?php if(($_GET['direction']) == 'DESC'):?>
-                                                        <a class="ml-1" href="tiposDeNegocio/read?sort=<?=$campo?>&direction=ASC"><i class="bi bi-filter"></i></a>
+                                                        <a class="ml-1" href="Negociotipos/read?sort=<?=$campo?>&direction=ASC"><i class="bi bi-filter"></i></a>
                                                     <?php else:?>
-                                                        <a class="ml-1" href="tiposDeNegocio/read?sort=<?=$campo?>&direction=DESC"><i class="bi bi-filter"></i></a>
+                                                        <a class="ml-1" href="Negociotipos/read?sort=<?=$campo?>&direction=DESC"><i class="bi bi-filter"></i></a>
                                                     <?php endif;?>
                                                     <?php endif;?>
                                                 </div>
@@ -73,7 +73,7 @@ $negociosTipos = $negociosTipos->find();
                                             <td><?=$negociotipo['modificador_id']?></td>
                                             <td>
                                                 <ul class="d-flex justify-content-center">
-                                                    <li class="mr-3"><a href="tiposDeNegocio/update?id=<?=$negociotipo['id']?>&nome=<?=$negociotipo['nome']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
+                                                    <li class="mr-3"><a href="Negociotipos/update?id=<?=$negociotipo['id']?>&nome=<?=$negociotipo['nome']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
                                                     <form method="POST">
                                                         <input type="hidden" name="delete_id" value="<?=$negociotipo['id']?>">
                                                         <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>

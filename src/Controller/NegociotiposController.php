@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 use App\Model\Entity\Negociotipo;
+use Cake\ORM\TableRegistry;
 
 /**
  * Negociotipos Controller
@@ -32,15 +33,21 @@ class NegociotiposController extends AppController
     public function add()
     {
         
-        // $Negociotipo = $this->Negociotipo->newEmptyEntity();
-        // if ($this->request->is('post')) {
-        //     $Negociotipo = $this->Negociotipo->patchEntity($Negociotipo, $this->request->getData());
-        //     if ($this->Negociotipo->save($Negociotipo)) {
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao salvar o imóvel.'));
-        // }
-        // $this->set('$Negociotipo', $Negociotipo);
+        if (!empty($_POST['nome']))
+        {
+            $hoje = new \DateTimeImmutable();
+            $tableNegociotipos = TableRegistry::getTableLocator()->get('Negociotipos');
+            
+            $negociotipoEntity = $tableNegociotipos->newEmptyEntity();
+            $negociotipoEntity->nome = $_POST['nome'];
+            $negociotipoEntity->ativo = true;
+            $negociotipoEntity->criado = $hoje;
+            $negociotipoEntity->modificado = $hoje;
+            $negociotipoEntity->criador_id = 1;
+            $negociotipoEntity->modificador_id = 1;
+            $tableNegociotipos->save($negociotipoEntity); 
+            return $this->redirect('admin/negociotipos');
+        }
     }
 
     /**
@@ -65,17 +72,31 @@ class NegociotiposController extends AppController
      */
     public function update()
     {
+        //dd($_POST);
+        if (!empty($_POST['nome']))
+        {
+            //dd($_GET);
+            $hoje = new \DateTimeImmutable();
+            $tableNegociotipos = TableRegistry::getTableLocator()->get('Negociotipos');
+            
+            $negociotipoEntity = $tableNegociotipos->newEmptyEntity();
 
-        // $Negociotipo = $this->Negociotipo->get($id);
-        // if ($this->request->is(['post', 'put'])) {
-        //     $Negociotipo = $this->Negociotipo->patchEntity($Negociotipo, $this->request->getData());
-        //     if ($this->Negociotipo->save($Negociotipo)) {
-        //         $this->Flash->success(__('Imóvel atualizado com sucesso.'));
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao atualizar o imóvel.'));
-        // }
-        // $this->set('Negociotipo', $Negociotipo);
+            $negociotipoEntity->id = $_GET['id'];
+            $negociotipoEntity->nome = $_POST['nome'];
+            $negociotipoEntity->ativo = 0;
+            if(!empty($_POST['ativo'])){
+                $negociotipoEntity->ativo = 1;    
+            }
+            $negociotipoEntity->criado = $hoje;
+            $negociotipoEntity->modificado = $hoje;
+            $negociotipoEntity->criador_id = 1;
+            $negociotipoEntity->modificador_id = 1;
+            $tableNegociotipos->save($negociotipoEntity); 
+
+            
+            
+            return $this->redirect('admin/negociotipos');
+        }
     }
    
     /**

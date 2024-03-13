@@ -1,4 +1,9 @@
-
+<?php 
+use Cake\ORM\TableRegistry;
+$negociotipoTable = TableRegistry::getTableLocator()->get('Negociotipos');
+$negociotipos = $negociotipoTable->get($_GET['id']);
+?>
+        
         <!--==================================*
                    Main Section
         *====================================-->
@@ -24,7 +29,7 @@
                     <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form method="POST">
+                                    <?= $this->Form->create(null, ['type' => 'post'])?>
                                         <h4 class="card_title">Editar <?=$_GET['nome']?></h4>
                                         <div class="form-group">
                                             <label for="example-text-input" class="col-form-label">Nome</label>
@@ -37,7 +42,7 @@
                                         <div class="form-group">
                                         <button class="btn btn-inverse-success" type="submit"><i class="bi bi-plus-lg mr-1"></i>Editar</button>
                                         </div>
-                                    </form>
+                                    <?= $this->Form->end()?>
                                 </div>
                             </div>
                         </div>

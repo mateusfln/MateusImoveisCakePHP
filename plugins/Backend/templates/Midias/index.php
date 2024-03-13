@@ -66,9 +66,9 @@ $midias = $midias->find();
                                     <?php foreach($midias as $midia):?>
                                         <tr>
                                             <th><?=$midia['id']?></th>
-                                            <th><?=$midia['imovelId']?></th>
+                                            <th><?=$midia['imovel_id']?></th>
                                             <td><?=$midia['identificacao']?></td>
-                                            <td><?=$midia['nomeDisco']?></td>
+                                            <td><?=$midia['nome_disco']?></td>
                                             <td><?=$midia['capa']?></td>
                                             <td><?=$midia['ativo']?></td>
                                             <td><?=$midia['criado']?></td>
@@ -77,7 +77,7 @@ $midias = $midias->find();
                                             <td><?=$midia['modificador_id']?></td>
                                             <td>
                                                 <ul class="d-flex justify-content-center">
-                                                    <li class="mr-3"><a href="midias/update?id=<?=$midia['id']?>&identificacao=<?=$midia['identificacao']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
+                                                    <li class="mr-3"><a href="midias/update?id=<?=$midia['id']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
                                                     <form method="POST">
                                                         <input type="hidden" name="delete_id" value="<?=$midia['id']?>">
                                                         <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>

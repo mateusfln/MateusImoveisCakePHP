@@ -1,4 +1,5 @@
 <?php
+use App\Model\Table\CaracteristicasImoveltiposTable;
 use App\Model\Table\CaracteristicasTable;
 use App\Model\Table\ImoveisTable;
 use App\Model\Table\ImoveltiposTable;
@@ -34,6 +35,16 @@ $negociotipos = $negociotipos->find();
 
 $caracteristicas = new CaracteristicasTable();
 $caracteristicas = $caracteristicas->find();
+
+$caracteristicasImoveltiposTable = new CaracteristicasImoveltiposTable();
+$caracteristicasImoveltipos = $caracteristicasImoveltiposTable->find();
+
+$listaCaracteristicaImoveltipo = [];
+foreach($caracteristicasImoveltipos as $caracteristicaImoveltipo) {
+    $listaCaracteristicaImoveltipo[$caracteristicaImoveltipo->imoveltipo_id][] = $caracteristicaImoveltipo->caracteristica_id;
+}
+
+$jsonCaracteristicaImoveltipo = json_encode($listaCaracteristicaImoveltipo);
 ?>
         <!--==================================*
                    Main Section
@@ -60,7 +71,7 @@ $caracteristicas = $caracteristicas->find();
                     <div class="col-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <form enctype="multipart/form-data" method="POST">
+                                <?= $this->Form->create(null, ['type' => 'file', 'method' => 'post']); ?>
                                         <div class="card">
                                         <div class="col-12 d-flex">
                                                 <div class="col-6 card">
@@ -146,8 +157,14 @@ $caracteristicas = $caracteristicas->find();
                                                             <div class="form-group">
                                                                 <?php foreach($caracteristicas as $caracteristica):?>
                                                                 <div>
-                                                                <input type="checkbox" name="caracteristicas[]" id="<?=$caracteristica['id']?>" value="<?=$caracteristica['id']?>">
-                                                                <label for="<?=$caracteristica['nome']?>" class="col-form-label"><?=$caracteristica['nome']?></label>
+                                                                <?php $nomePost = str_replace(' ', '_', $caracteristica['nome']); ?>
+                                                                <?= $this->Form->control('caracteristicas[]', [
+                                                                    'type' => 'checkbox',
+                                                                    'id' => $nomePost,
+                                                                    'value' => $caracteristica['id'],
+                                                                    'label' => $caracteristica['nome'],
+                                                                    'class' => 'col-form-label'
+                                                                ]) ?>
                                                                 <br>
                                                                 </div>
                                                                 <?php endforeach;?>
@@ -169,7 +186,7 @@ $caracteristicas = $caracteristicas->find();
                                                 <button class="btn btn-inverse-success" type="submit"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button>
                                             </div>
                                         </div>
-                                    </form>
+                                    <?= $this->Form->end(); ?>
                                 </div>
                             </div>
                         </div>
