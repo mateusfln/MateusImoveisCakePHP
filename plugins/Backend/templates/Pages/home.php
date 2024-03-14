@@ -52,7 +52,7 @@ $imoveis = $imoveis->find();
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card_title">
-                                Tabela de Imóveis <a href="imovel/add"><button type="button" class="btn btn-inverse-success ml-3"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button></a>
+                                Tabela de Imóveis <a href="admin/imovel/add"><button type="button" class="btn btn-inverse-success ml-3"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button></a>
                             </h4>
                             <div class="single-table">
                                 <div class="table-responsive">

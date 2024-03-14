@@ -8,7 +8,7 @@ $caracteristicasDAO = new CaracteristicasTable();
 $caracteristicas = $caracteristicasDAO->find();
 
 $caracteristicasImoveltiposTable = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
-$caracteristicasImoveltipos = $caracteristicasImoveltiposTable->find()->where(['CaracteristicasImoveltipos.caracteristica_id =' => $_GET['id']]);
+$caracteristicasImoveltipos = $caracteristicasImoveltiposTable->find()->where(['CaracteristicasImoveltipos.imoveltipo_id =' => $_GET['itp']]);
 
 $imoveltiposDAO = new ImoveltiposTable();
 $imoveltipos = $imoveltiposDAO->find();
@@ -18,17 +18,19 @@ $imoveltipos = $imoveltiposDAO->find();
 $negociotipos = new NegociotiposTable();
 $negociotipos = $negociotipos->find();
 
-$imovelNegociostiposTable = TableRegistry::getTableLocator()->get('ImoveisNegociotipos');
-$imovelNegociostipos = $imovelNegociostiposTable->find()->where(['ImoveisNegociotipos.imoveltipo_id =' => $_GET['id']]);
+ $imovelNegociostiposTable = TableRegistry::getTableLocator()->get('ImoveisNegociotipos');
+ $imovelNegociostipos = $imovelNegociostiposTable->find()->where(['ImoveisNegociotipos.imovel_id =' => $_GET['id']])->firstOrFail();
+ //dd($imovelNegociostipos);
 
 $imovelTable = TableRegistry::getTableLocator()->get('Imoveis');
 $imovel = $imovelTable->get($_GET['id']);
 
-$arrCaracteristicas = [];
+$arrImoveltipos = [];
 
-foreach ($caracteristicasImoveltipos as $caracteristicas) {
-    $arrCaracteristicas[] = $caracteristicas->imoveltipo_id;
+foreach ($caracteristicasImoveltipos as $imoveltiposItem) {
+    $arrImoveltipos[] = $imoveltiposItem->caracteristica_id;
 }
+//dd($arrImoveltipos);
 
 
 ?>
@@ -68,80 +70,112 @@ foreach ($caracteristicasImoveltipos as $caracteristicas) {
                                                             
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">IDENTIFICACAO</label>
-                                                                    <input class="form-control" required type="text"name="IDENTIFICACAO" value="<?=$imovel['identificacao']?>">
+                                                                    <input class="form-control" required type="text"name="identificacao" value="<?=$imovel['identificacao']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">MATRICULA</label>
-                                                                    <input class="form-control" required type="text"name="MATRICULA" value="<?=$imovel['matricula']?>">
+                                                                    <input class="form-control" required type="text"name="matricula" value="<?=$imovel['matricula']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">INSCRICAO IMOBILIARIA</label>
-                                                                    <input class="form-control" required type="text"name="INSCRICAO IMOBILIARIA" value="<?=$imovel['inscricao_imobiliaria']?>">
+                                                                    <input class="form-control" required type="text"name="inscricao imobiliaria" value="<?=$imovel['inscricao_imobiliaria']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">LOGRADOURO</label>
-                                                                    <input class="form-control" required type="text"name="LOGRADOURO" value="<?=$imovel['logradouro']?>">
+                                                                    <input class="form-control" required type="text"name="logradouro" value="<?=$imovel['logradouro']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">NUMERO LOGRADOURO</label>
-                                                                    <input class="form-control" required type="text"name="NUMERO LOGRADOURO" value="<?=$imovel['numero_logradouro']?>">
+                                                                    <input class="form-control" required type="text"name="numero logradouro" value="<?=$imovel['numero_logradouro']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">RUA</label>
-                                                                    <input class="form-control" required type="text"name="RUA" value="<?=$imovel['rua']?>">
+                                                                    <input class="form-control" required type="text"name="rua" value="<?=$imovel['rua']?>">
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label for="example-text-input" class="col-form-label">COMPLEMENTO</label>
+                                                                    <input class="form-control" required type="text"name="complemento" value="<?=$imovel['complemento']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">BAIRRO</label>
-                                                                    <input class="form-control" required type="text"name="BAIRRO" value="<?=$imovel['bairro']?>">
+                                                                    <input class="form-control" required type="text"name="bairro" value="<?=$imovel['bairro']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">CIDADE</label>
-                                                                    <input class="form-control" required type="text"name="CIDADE" value="<?=$imovel['cidade']?>">
+                                                                    <input class="form-control" required type="text"name="cidade" value="<?=$imovel['cidade']?>">
                                                                 </div>
                                                                 <div class="form-group">
-                                                                    <label for="example-text-input" class="col-form-label">ESTADO</label>
-                                                                    <input class="form-control" required type="text"name="ESTADO" value="<?=$imovel['estado']?>">
+                                                                    <label for="example-text-input" class="col-form-label">Estado</label>
+                                                                    <select class="form-control" required name="estado">
+                                                                        <option value="AC">AC </option>
+                                                                        <option value="AL">AL </option>
+                                                                        <option value="AM">AM </option>
+                                                                        <option value="AP">AP </option>
+                                                                        <option value="BA">BA </option>
+                                                                        <option value="CE">CE </option>
+                                                                        <option value="DF">DF </option>
+                                                                        <option value="ES">ES </option>
+                                                                        <option value="GO">GO </option>
+                                                                        <option value="MA">MA </option>
+                                                                        <option value="MG">MG </option>
+                                                                        <option value="MS">MS </option>
+                                                                        <option value="MT">MT </option>
+                                                                        <option value="PA">PA </option>
+                                                                        <option value="PB">PB </option>
+                                                                        <option value="PE">PE </option>
+                                                                        <option value="PI">PI </option>
+                                                                        <option value="PR">PR </option>
+                                                                        <option value="RJ">RJ </option>
+                                                                        <option value="RN">RN </option>
+                                                                        <option value="RO">RO </option>
+                                                                        <option value="RR">RR </option>
+                                                                        <option value="RS">RS </option>
+                                                                        <option value="SC">SC </option>
+                                                                        <option value="SE">SE </option>
+                                                                        <option value="SP">SP </option>
+                                                                        <option value="TO">TO </option>
+                                                                    </select>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">CEP</label>
-                                                                    <input class="form-control" required type="text"name="CEP" value="<?=$imovel['cep']?>">
+                                                                    <input class="form-control" required type="text"name="cep" value="<?=$imovel['cep']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">IBGE</label>
-                                                                    <input class="form-control" required type="text"name="IBGE" value="<?=$imovel['ibge']?>">
+                                                                    <input class="form-control" required type="text"name="ibge" value="<?=$imovel['ibge']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">metrosQuadrados</label>
-                                                                    <input class="form-control" required type="text"name="metrosQuadrados" value="<?=$imovel['metrosQuadrados']?>">
+                                                                    <input class="form-control" required type="text"name="metros_quadrados" value="<?=$imovel['metros_quadrados']?>">
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">Quartos</label> 
-                                                                    <select class="form-control" name="Quartos" value="<?=$imovel['quartos']?>">
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
+                                                                    <select class="form-control" name="quartos" >
+                                                                    <option value="1" <?= $imovel['quartos'] == 1?  'selected="selected"': '' ?>>1</option>
+                                                                    <option value="2" <?= $imovel['quartos'] == 2?  'selected="selected"': '' ?>>2</option>
+                                                                    <option value="3" <?= $imovel['quartos'] == 3?  'selected="selected"': '' ?>>3</option>
+                                                                    <option value="4" <?= $imovel['quartos'] == 4?  'selected="selected"': '' ?>>4</option>
+                                                                    <option value="5" <?= $imovel['quartos'] == 5?  'selected="selected"': '' ?>>5</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">Banheiros</label> 
-                                                                    <select class="form-control" name="Banheiros" value="<?=$imovel['banheiros']?>">
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
+                                                                    <select class="form-control" name="banheiros" >
+                                                                    <option value="1" <?= $imovel['banheiros'] == 1?  'selected="selected"': '' ?>>1</option>
+                                                                    <option value="2" <?= $imovel['banheiros'] == 2?  'selected="selected"': '' ?>>2</option>
+                                                                    <option value="3" <?= $imovel['banheiros'] == 3?  'selected="selected"': '' ?>>3</option>
+                                                                    <option value="4" <?= $imovel['banheiros'] == 4?  'selected="selected"': '' ?>>4</option>
+                                                                    <option value="5" <?= $imovel['banheiros'] == 5?  'selected="selected"': '' ?>>5</option>
                                                                     </select>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="example-text-input" class="col-form-label">Garagem</label> 
-                                                                    <select class="form-control" name="Garagem" value="<?=$imovel['vagasGaragem']?>">
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
+                                                                    <select class="form-control" name="garagem" >
+                                                                    <option value="1" <?= $imovel['garagem'] == 1?  'selected="selected"': '' ?>>1</option>
+                                                                    <option value="2" <?= $imovel['garagem'] == 2?  'selected="selected"': '' ?>>2</option>
+                                                                    <option value="3" <?= $imovel['garagem'] == 3?  'selected="selected"': '' ?>>3</option>
+                                                                    <option value="4" <?= $imovel['garagem'] == 4?  'selected="selected"': '' ?>>4</option>
+                                                                    <option value="5" <?= $imovel['garagem'] == 5?  'selected="selected"': '' ?>>5</option>
                                                                     </select>
                                                                 </div>
                                                                 
@@ -153,7 +187,7 @@ foreach ($caracteristicasImoveltipos as $caracteristicas) {
                                                             <div class="form-group">
                                                             <select class="form-control" name='imoveltipo' id='imoveltipo'>
                                                                 <?php foreach($imoveltipos as $imoveltipo):?>
-                                                                <option value="<?=$imoveltipo['id']?>" <?= $imoveltipo['id'] == $imoveltipo['id']?  'selected="selected"': '' ?> id="<?=$imoveltipo['nome']?>"><?=$imoveltipo['nome']?></option>
+                                                                <option value="<?=$imoveltipo['id']?>" <?= $imoveltipo['id'] == $imovel['imoveltipo_id']?  'selected="selected"': '' ?> id="<?=$imoveltipo['nome']?>"><?=$imoveltipo['nome']?></option>
                                                                 <label for="<?=$imoveltipo['nome']?>" class="col-form-label"><?=$imoveltipo['nome']?></label>
                                                                 <?php endforeach;?>
                                                                 </select>
@@ -162,7 +196,7 @@ foreach ($caracteristicasImoveltipos as $caracteristicas) {
                                                             <div class="form-group">
                                                             <select class="form-control" name='negociotipo'>
                                                                 <?php foreach($negociotipos as $negociotipo):?>
-                                                                <option value="<?=$negociotipo['id']?>" <?= $negociotipo['id'] == $negociotipo['id']?  'selected="selected"': '' ?> id="<?=$negociotipo['nome']?>"><?=$negociotipo['nome']?></option>
+                                                                <option value="<?=$negociotipo['id']?>" <?= $negociotipo['id'] == $imovelNegociostipos['negociotipo_id']?  'selected="selected"': '' ?> id="<?=$negociotipo['nome']?>"><?=$negociotipo['nome']?></option>
                                                                 <label for="<?=$negociotipo['nome']?>" class="col-form-label"><?=$negociotipo['nome']?></label>
                                                                 <?php endforeach;?>
                                                                 </select>
@@ -171,28 +205,27 @@ foreach ($caracteristicasImoveltipos as $caracteristicas) {
                                                             <div class="form-group">
                                                             
                                                                 <?php foreach($caracteristicas as $caracteristica):?>
-                                                                <div>
-                                                                <input type="checkbox" name="caracteristicas[]" id="<?=$caracteristica['id']?>" value="<?=$caracteristica['id']?>" <?= in_array($caracteristica['id'], $arrCaracteristicas) ? ' checked="checked"' : '' ?>>
-                                                                <label for="<?=$caracteristica['id']?>" class="col-form-label"><?=$caracteristica['nome']?></label>
-                                                                <br>
-                                                                </div>
+                                                                <?php $nomePost = str_replace(' ', '_', $caracteristica['nome']); ?>
+                                                                <input type="checkbox" name="caracteristicas[]" id="<?=$nomePost?>" value="<?=$caracteristica['id']?>" <?= in_array($caracteristica['id'], $arrImoveltipos) ? ' checked="checked"' : '' ?>>
+                                                                <label for="<?=$nomePost?>" class="col-form-label"><?=$caracteristica['nome']?></label>
+                                                                <br> 
                                                                 <?php endforeach;?>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label for="example-text-input" class="col-form-label">Valor</label>
-                                                                <input class="form-control" required type="number" name="valor" value="">
+                                                                <input class="form-control" required type="number" name="valor" value="<?= $imovelNegociostipos['valor']?>">
                                                             </div>
                                                             <label for="example-text-input" class="col-form-label">Midias</label>
 
                                                             <div class="input-group mb-3">
                                                                 <div class="custom-file">
-                                                                    <input multiple type="file" name="arquivo[]">
+                                                                    <input required multiple type="file" name="arquivo[]">
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button class="btn btn-inverse-success" type="submit"><i class="bi bi-plus-lg mr-1"></i>Adicionar</button>
+                                                <button class="btn btn-inverse-warning" type="submit"><i class="bi bi-pencil-square mr-1 mr-1"></i>Editar</button>
                                             </div>
                                         </div>
                                     <?=$this->Form->end()?>
@@ -209,7 +242,7 @@ foreach ($caracteristicasImoveltipos as $caracteristicas) {
                    End Main Section
         *====================================-->
     
-<script>
+<!-- <script>
     let jsonCaracteristicaImoveltipo = JSON.parse('<?=$jsonCaracteristicaImoveltipo?>');
 
 function getCaracteristicasByImovelTipoId(imovelTipoId) {
@@ -233,4 +266,4 @@ $('#imoveltipo').change(function(){
 });
 
 $('#imoveltipo').trigger('change');
-</script>
+</script> -->

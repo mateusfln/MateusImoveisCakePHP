@@ -2,46 +2,43 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-use App\Model\Entity\Imovel;
+
 use App\Model\Table\CaracteristicasImoveltiposTable;
+use App\Model\Table\ImoveisTable;
+use Cake\Http\Response;
 use Cake\ORM\TableRegistry;
 
 /**
- * Imoveis Controller
+ * Classe Controladora de Imóveis
  *
  * @property \App\Model\Table\ImoveisTable $Imoveis
  */
-
-
 class ImovelController extends AppController
-{   
+{
     /**
-     * Cria um registro na tabela Imovel de acordo com os dados fornecidos
-     * 
+     * Método que envia para a view uma variavel "$imoveis" contendo os registros da tabela Imoveis
+     * @return void 
      */
-    public function index()
+    public function index() : void
     {
-        // echo'index de Imoveis';
-        // die;
-        // $Imovel = $this->Imoveis->find();
-        // $this->set(compact('Imovel'));
+        $imoveis = new ImoveisTable();
+        $imoveis = $imoveis->find();
+        $this->set(compact('imoveis'));
     }
+
     /**
-     * Cria um registro na tabela Imovel de acordo com os dados fornecidos
-     * 
-     * @param Imovel $Imovel Objeto Imovel com dados a serem preenchidos
+     * Cria um registro na tabela Imovel de acordo com os dados fornecidos na view
+     * @return Response|null
      */
-    public function add()
+    public function add() : Response|null
     {
-        if(!empty($_POST) && !empty($_POST['negociotipo']) && !empty($_POST['valor']) && isset($_FILES['arquivo'])){
-        
+        if (!empty($_POST) && !empty($_POST['negociotipo']) && !empty($_POST['valor']) && isset($_FILES['arquivo'])) {
+
             $imovelTable = TableRegistry::getTableLocator()->get('Imoveis');
             $imovelEntity = $imovelTable->newEmptyEntity();
-            
             $hoje = new \DateTimeImmutable();
-        
             $arquivo = $_FILES['arquivo'];
-        
+
             $imovelEntity->imoveltipo_id = ($_POST['imoveltipo']);
             $imovelEntity->identificacao = ($_POST['Identificacao']);
             $imovelEntity->matricula = ($_POST['Matricula']);
@@ -64,12 +61,13 @@ class ImovelController extends AppController
             $imovelEntity->criador_id = (1);
             $imovelEntity->modificador_id = (1);
             $imovelEntity->modificado = ($hoje);
+
             $imovelTable->save($imovelEntity);
             $idImovel = $imovelEntity->id;
-            
+
             $imovelNegociotiposTable = TableRegistry::getTableLocator()->get('ImoveisNegociotipos');
             $imovelNegociotiposEntity = $imovelNegociotiposTable->newEmptyEntity();
-        
+
             $imovelNegociotiposEntity->imovel_id = ($idImovel);
             $imovelNegociotiposEntity->negociotipo_id = ($_POST['negociotipo']);
             $imovelNegociotiposEntity->valor = ($_POST['valor']);
@@ -78,13 +76,14 @@ class ImovelController extends AppController
             $imovelNegociotiposEntity->criador_id = (1);
             $imovelNegociotiposEntity->modificador_id = (1);
             $imovelNegociotiposEntity->modificado = ($hoje);
+
             $imovelNegociotiposTable->save($imovelNegociotiposEntity);
-        
+
             foreach ($_POST['caracteristicas'] as $caracteristica) {
 
                 $tableCaracteristicaImoveltipo = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
                 $caracteristicasImoveltipos = $tableCaracteristicaImoveltipo->newEmptyEntity();
-    
+
                 $caracteristicasImoveltipos->imoveltipo_id = $idImovel;
                 $caracteristicasImoveltipos->caracteristica_id = $caracteristica;
                 $caracteristicasImoveltipos->ativo = true;
@@ -95,101 +94,166 @@ class ImovelController extends AppController
 
                 $tableCaracteristicaImoveltipo->save($caracteristicasImoveltipos);
             }
-                $arquivo = $_FILES['arquivo'];
-        
-                foreach($arquivo['name'] as $index => $arq){
-        
-                    $this->enviarArquivos($arquivo['error'][$index], $arquivo['size'][$index], $arquivo['name'][$index], $arquivo['tmp_name'][$index], $idImovel);
-                }  
-                return $this->redirect('/admin/imovel');
+
+            foreach ($arquivo['name'] as $index => $arq) {
+
+                $this->enviarArquivos($arquivo['error'][$index], $arquivo['size'][$index], $arquivo['name'][$index], $arquivo['tmp_name'][$index], $idImovel);
+            }
+            return $this->redirect('/admin/imovel');
         }
+        return null;
     }
 
     /**
      * Retorna um registro na tabela Imovel de acordo com os dados fornecidos
-     * 
-     * @param int $id   Código do Imovel
-     * @throws \Exception
      */
-    public function read() 
+    public function read()
     {
-        // echo'index de Imoveis '.$this->request->getParam('id');
-        // die;
-
-        // $Imovel = $this->Imovel->get($id);
-        // $this->set('Imovel', $Imovel);
+        
     }
-    
+
     /**
      * Edita um registro na tabela Imovel de acordo com os dados fornecidos
-     * 
-   
+     * @return Response|null
      */
-    public function update()
+    public function update() : Response|null
     {
 
-        // $Imovel = $this->Imovel->get($id);
-        // if ($this->request->is(['post', 'put'])) {
-        //     $Imovel = $this->Imovel->patchEntity($Imovel, $this->request->getData());
-        //     if ($this->Imovel->save($Imovel)) {
-        //         $this->Flash->success(__('Imóvel atualizado com sucesso.'));
-        //         return $this->redirect(['action' => 'index']);
-        //     }
-        //     $this->Flash->error(__('Erro ao atualizar o imóvel.'));
-        // }
-        // $this->set('Imovel', $Imovel);
+        if (!empty($_POST) && !empty($_POST['negociotipo']) && !empty($_POST['valor']) && isset($_FILES['arquivo'])) {
+
+            $imovelTable = TableRegistry::getTableLocator()->get('Imoveis');
+            $imovelEntity = $imovelTable->newEmptyEntity();
+            $hoje = new \DateTimeImmutable();
+
+            $arquivo = $_FILES['arquivo'];
+            $imovelEntity->id = $_GET['id'];
+            $imovelEntity->imoveltipo_id = $_POST['imoveltipo'];
+            $imovelEntity->identificacao = $_POST['identificacao'];
+            $imovelEntity->matricula = $_POST['matricula'];
+            $imovelEntity->inscricao_imobiliaria = $_POST['inscricao_imobiliaria'];
+            $imovelEntity->logradouro = $_POST['logradouro'];
+            $imovelEntity->numero_logradouro = $_POST['numero_logradouro'];
+            $imovelEntity->rua = $_POST['rua'];
+            $imovelEntity->complemento = $_POST['complemento'];
+            $imovelEntity->bairro = $_POST['bairro'];
+            $imovelEntity->cidade = $_POST['cidade'];
+            $imovelEntity->estado = $_POST['estado'];
+            $imovelEntity->cep = $_POST['cep'];
+            $imovelEntity->ibge = $_POST['ibge'];
+            $imovelEntity->metros_quadrados = $_POST['metros_quadrados'];
+            $imovelEntity->quartos = $_POST['quartos'];
+            $imovelEntity->banheiros = $_POST['banheiros'];
+            $imovelEntity->garagem = $_POST['garagem'];
+            $imovelEntity->ativo = true;
+            $imovelEntity->criado = $hoje;
+            $imovelEntity->criador_id = 1;
+            $imovelEntity->modificador_id = 1;
+            $imovelEntity->modificado = $hoje;
+
+            $imovelTable->save($imovelEntity);
+
+            $imovelNegociotiposTable = TableRegistry::getTableLocator()->get('ImoveisNegociotipos');
+            $imovelNegociotiposEntity = $imovelNegociotiposTable->newEmptyEntity();
+            $imovelNegociotiposEntity = $imovelNegociotiposTable->find()->where(['ImoveisNegociotipos.imovel_id =' => $imovelEntity->id])->firstOrFail();
+
+            $imovelNegociotiposEntity->imovel_id = ($imovelEntity->id);
+            $imovelNegociotiposEntity->negociotipo_id = ($_POST['negociotipo']);
+            $imovelNegociotiposEntity->valor = ($_POST['valor']);
+            $imovelNegociotiposEntity->ativo = (true);
+            $imovelNegociotiposEntity->criado = ($hoje);
+            $imovelNegociotiposEntity->criador_id = (1);
+            $imovelNegociotiposEntity->modificador_id = (1);
+            $imovelNegociotiposEntity->modificado = ($hoje);
+
+            $imovelNegociotiposTable->save($imovelNegociotiposEntity);
+
+            $caracteristicasImoveltiposTable = new CaracteristicasImoveltiposTable();
+            $caracteristicasImoveltiposTable->deleteAll(['imoveltipo_id' => $_POST['imoveltipo']]);
+
+
+            foreach ($_POST['caracteristicas'] as $caracteristica) {
+
+                $tableCaracteristicaImoveltipo = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
+                $caracteristicasImoveltipos = $tableCaracteristicaImoveltipo->newEmptyEntity();
+
+                $caracteristicasImoveltipos->imoveltipo_id = $_POST['imoveltipo'];
+                $caracteristicasImoveltipos->caracteristica_id = $caracteristica;
+                $caracteristicasImoveltipos->ativo = true;
+                $caracteristicasImoveltipos->criado = $hoje;
+                $caracteristicasImoveltipos->modificado = $hoje;
+                $caracteristicasImoveltipos->criador_id = 1;
+                $caracteristicasImoveltipos->modificador_id = 1;
+
+                $tableCaracteristicaImoveltipo->save($caracteristicasImoveltipos);
+            }
+            $arquivo = $_FILES['arquivo'];
+
+            foreach ($arquivo['name'] as $index => $arq) {
+
+                $this->enviarArquivos($arquivo['error'][$index], $arquivo['size'][$index], $arquivo['name'][$index], $arquivo['tmp_name'][$index], $imovelEntity->id);
+            }
+            return $this->redirect('/admin/imovel');
+        }
+        return null;
     }
-   
+
     /**
      * Deleta um registro na tabela Imovel de acordo com os dados fornecidos
-     * 
-     * @throws \Exception
-     * @param int $id
-     * @return void
+     * @return Response|null
      */
-    public function delete(int $id)
+    public function delete() : Response|null
     {
 
-        $this->request->allowMethod(['post', 'delete']);
-        $Imovel = $this->Imovel->get($id);
-        if ($this->Imovel->delete($Imovel)) {
-            $this->Flash->success(__('Imóvel excluído com sucesso.'));
-        } else {
-            $this->Flash->error(__('Erro ao excluir o imóvel.'));
+        if (!empty($_POST['delete_id'])) {
+            $imovelTable = new ImoveisTable();
+            $imovelTable->deleteAll(['id' => $_POST['delete_id']]);
+            return $this->redirect('admin/Imovel');
         }
-        return $this->redirect(['action' => 'index']);
+        return null;
+        
+
     }
 
-
-    private function enviarArquivos($error, $size, $name, $tmp_name, $id){
-
-        if($error){
-            echo('Falha ao enviar o arquivo');
+    /**
+     * Método que envia para o banco e salva dentro do projeto os arquivos referente as mídias dos imóveis
+     * @param int $error
+     * @param int $size
+     * @param string $name
+     * @param string $tmp_name
+     * @param string|int $id
+     * @return boolean|null
+     */
+    private function enviarArquivos(int $error, int $size, string $name, string $tmp_name, string|int $id) : bool|null
+    {
+        $doisMegaBytes = 2097152;
+         
+        if ($error) {
+            echo ('Falha ao enviar o arquivo');
         }
 
-        if($size > 2097152){
-            echo('Arquivo maior que o limite máximo de tamanho (2Mb)');
+        if ($size > $doisMegaBytes) {
+            echo ('Arquivo maior que o limite máximo de tamanho (2Mb)');
         }
 
         $pasta = "C:/wamp64/www/micake/html/plugins/Frontend/webroot/images/midiasImoveis/";
-        
+
         $nomeDoArquivo = $name;
         $nomeDoArquivo = uniqid();
         $extensao = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-        $path = $pasta.$nomeDoArquivo.".".$extensao;
-        $caminho = "/Frontend/images/midiasImoveis/".$nomeDoArquivo.'.'.$extensao;
+        $path = $pasta . $nomeDoArquivo . "." . $extensao;
+        $caminho = "/Frontend/images/midiasImoveis/" . $nomeDoArquivo . '.' . $extensao;
         $sucesso = move_uploaded_file($tmp_name, $path);
-        
-        if($extensao != 'jpg' && $extensao != 'png' ){
+
+        if ($extensao != 'jpg' && $extensao != 'png') {
             header('Location: https://micake.localadmin/midias/add?erro=tipo de midia não suportado, favor inserir uma midia com a extensão PNG ou JPG.');
             exit;
         }
-        if($sucesso){
+        if ($sucesso) {
             $hoje = new \DateTimeImmutable();
             $midiaTable = TableRegistry::getTableLocator()->get('Midias');
-            
+
             $midiaEntity = $midiaTable->newEmptyEntity();
-        
+
             $midiaEntity->imovel_id = $id;
             $midiaEntity->identificacao = $nomeDoArquivo;
             $midiaEntity->nome_disco = $caminho;
@@ -200,9 +264,10 @@ class ImovelController extends AppController
             $midiaEntity->modificador_id = 1;
             $midiaEntity->modificado = $hoje;
             $midiaTable->save($midiaEntity);
-        }else{
+        } else {
             return false;
         }
-    }    
-    
+        return null;
+    }
+
 }

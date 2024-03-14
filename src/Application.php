@@ -55,6 +55,7 @@ class Application extends BaseApplication
             );
         }
         $this->addPlugin('Backend');
+        $this->addPlugin('Frontend');
         $this->layout = 'default';
     }
 

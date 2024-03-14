@@ -1,5 +1,4 @@
 <?php
-use App\Model\Table\ImoveisTable;
 $campos = array(
     'Id',
     'Identificacao',
@@ -22,10 +21,6 @@ $campos = array(
     'Modificado',
     'CriadorId',
     'ModificadorId');
-
-$imoveis = new ImoveisTable();
-$imoveis = $imoveis->find();
-
 ?>
  
  <!--==================================*
@@ -112,11 +107,16 @@ $imoveis = $imoveis->find();
                                             
                                             <td>
                                                 <ul class="d-flex justify-content-center">
-                                                    <li class="mr-3"><a href="imovel/update?id=<?=$imovel['id']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
-                                                    <form method="POST">
+                                                    <li class="mr-3"><a href="imovel/update?id=<?=$imovel['id']?>&itp=<?=$imovel['imoveltipo_id']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
+                                                    <?= $this->Form->create(null, [
+                                                                    'url' => [
+                                                                        'controller' => 'Imovel',
+                                                                        'action' => 'delete',
+                                                                    ],
+                                                                ]) ?>
                                                         <input type="hidden" name="delete_id" value="<?=$imovel['id']?>">
                                                         <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>
-                                                    </form>
+                                                    <?= $this->Form->end() ?>
                                                 </ul>
                                             </td>
                                         </tr>

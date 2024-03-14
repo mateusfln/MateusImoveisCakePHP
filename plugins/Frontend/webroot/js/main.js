@@ -1,521 +1,483 @@
-/* ========================================================================
+(function ($) {
+    "use strict";
+/*--
+Commons Variables
+-----------------------------------*/
+var windows = $(window);
+/*--
+    Menu Sticky
+-----------------------------------*/
+var sticky = $('.header-sticky');
 
-Main.js ( Main Theme JS file )
-
-Theme Name: Falr - Bootstrap 4 Admin Dashboard Template
-Version: 1.0
-Author: Vizz Studio
-Author URI: http://themeforest.net/user/vizzstudio
-If you having trouble in editing js. please send a mail to hq8055@gmail.com
-
-=========================================================================
- */
-
-
-"use strict";
-
-/*======== Doucument Ready Function =========*/
-jQuery(document).ready(function () {
-
-    // === following js will activate the menu in left side bar based on url ====
-    $("#sidebar-menu a").each(function () {
-        var pageUrl = window.location.href.split(/[?#]/)[0];
-        if (this.href == pageUrl) {
-            $(this).addClass("active");
-            $(this).parent().addClass("active"); // add active to li of the current link
-            $(this).parent().parent().addClass("active");
-            $(this).parent().parent().prev().addClass("active"); // add active class to an anchor
-            $(this).parent().parent().parent().addClass("active");
-            $(this).parent().parent().parent().parent().addClass("active"); // add active to li of the current link
-            $(this).parent().parent().parent().parent().parent().addClass("active");
-        }
-    });
-    /*--------------------------------
-         Mailbox Star
-     --------------------------------*/
-    $('.mail_list table .star i').click(function(e) {
-        $(this).toggleClass("fa-star fa-star-o");
-    });
-
-    //CACHE JQUERY OBJECTS
-    var $window = $(window);
-
-    $window.on( 'load', function () {
-        /*======== Preloader =========*/
-
-        $(".loading-text").fadeOut();
-        $(".loading").delay(350).fadeOut("slow");
-
-        /* END of Preloader */
-
-    });
-
-    // Mailbox read mail Link
-
-    $(".clickable-row").click(function() {
-        window.location = $(this).data("href");
-    });
-
-    /*================================
-    sidebar menu
-    ==================================*/
-
-    $("#sidebar_menu").metisMenu();
-
-    $('.button-menu-mobile,.mobile_menu_btn').on('click', function (event) {
-        event.preventDefault();
-        $("body").toggleClass("side_collapsed");
-    });
-
-    if ($(window).width() < 1025 || $('.icon_sidebar').length == 1) {
-        $('body').addClass('side_collapsed');
-    } else {
-        $('body').removeClass('side_collapsed');
+windows.on('scroll', function() {
+    var scroll = windows.scrollTop();
+    if (scroll < 300) {
+        sticky.removeClass('is-sticky');
+    }else{
+        sticky.addClass('is-sticky');
     }
+});
 
-    /*================================
-    slimscroll activation
-    ==================================*/
-     $('.menu-inner').slimscroll({
-        height: 'auto',
-        position: 'right',
-        size: "5px",
-        color: '#9ea5ab',
-        wheelStep: 5,
-        touchScrollStep: 50
-    });
+/*--
+    Mobile Menu
+-----------------------------------*/
+var mainMenuNav = $('.main-menu');
+mainMenuNav.meanmenu({
+    meanScreenWidth: '991',
+    meanMenuContainer: '.mobile-menu',
+    meanMenuClose: '<span class="menu-close"></span>',
+    meanMenuOpen: '<span class="menu-bar"></span>',
+    meanRevealPosition: 'right',
+    meanMenuCloseSize: '0',
+});
 
-    $('.slimscroll').slimscroll({
-        height: 'auto',
-        position: 'right',
-        size: "5px",
-        color: '#9ea5ab',
-        touchScrollStep: 50
-    });
-
-    $('.nofity-list').slimScroll({
-        height: '435px'
-    });
-    $('.timeline-area').slimScroll({
-        height: '500px'
-    });
-    $('.recent-activity').slimScroll({
-        height: 'calc(100vh - 114px)'
-    });
-    $('.settings-list').slimScroll({
-        height: 'calc(100vh - 158px)'
-    });
-
-    // Main Menu Horizontal
-    $(function() {
-        var body = $('body');
-        var footer = $('.footer');
-
-        var current = location.pathname.split("/").slice(-1)[0].replace(/^\/|\/$/g, '');
-        $('.rt_nav_header.horizontal-layout .nav-bottom .page-navigation .nav-item').each(function() {
-            var $this = $(this);
-            if (current === "") {
-                //for root url
-                if ($this.find(".nav-link").attr('href').indexOf("index.html") !== -1) {
-                    $(this).find(".nav-link").parents('.nav-item').last().addClass('active');
-                    $(this).addClass("active");
+/*--
+    Sliders
+-----------------------------------*/
+// Hero Slider
+$('.hero-slider').slick({
+    infinite: true,
+    fade: false,
+    dots: false,
+    prevArrow: '<button class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+    nextArrow: '<button class="slick-next"><i class="fa fa-angle-right"></i></button>',
+    responsive: [
+        {
+        breakpoint: 992,
+            settings: {
+                dots: true,
+                arrows: false,
+            }
+        },
+    ]
+});
+// Property Carousel For 3 Column
+$('.property-carousel').each(function (){
+    var $this = $(this);
+    var $row = $this.attr("data-row") ? parseInt($this.attr("data-row"), 10) : 1;
+    $this.slick({
+        infinite: true,
+        arrows: true,
+        dots: true,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        rows: $row,
+        prevArrow: '<button class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+        nextArrow: '<button class="slick-next"><i class="fa fa-angle-right"></i></button>',
+        responsive: [
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 2,
                 }
-            } else {
-                //for other url
-                if ($this.find(".nav-link").attr('href').indexOf(current) !== -1) {
-                    $(this).find(".nav-link").parents('.nav-item').last().addClass('active');
-                    $(this).addClass("active");
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
                 }
-            }
-        })
-
-        $(".rt_nav_header.horizontal-layout .nav_wrapper_main .navbar-toggler").on("click", function() {
-            $(".rt_nav_header.horizontal-layout .nav-bottom").toggleClass("header-toggled");
-        });
-
-        // Navigation in mobile menu on click
-        var navItemClicked = $('.page-navigation >.nav-item');
-        navItemClicked.on("click", function(event) {
-            if(window.matchMedia('(max-width: 991px)').matches) {
-                if(!($(this).hasClass('show-submenu'))) {
-                    navItemClicked.removeClass('show-submenu');
+            },
+        ]
+    });
+});
+// Property Slider
+$('.property-slider-2').each(function (){
+    var $this = $(this);
+    $this.slick({
+        infinite: true,
+        arrows: true,
+        dots: false,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        prevArrow: '<button class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+        nextArrow: '<button class="slick-next"><i class="fa fa-angle-right"></i></button>',
+    });
+});
+// Single Property Gallery Slider
+$('.single-property-gallery').each(function (){
+    var $this = $(this);
+    $this.slick({
+        infinite: true,
+        arrows: false,
+        dots: false,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        asNavFor: '.single-property-thumb',
+    });
+});
+// Single Property Gallery Thumbnail Slider
+$('.single-property-thumb').each(function (){
+    var $this = $(this);
+    $this.slick({
+        infinite: true,
+        arrows: false,
+        dots: false,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        focusOnSelect: true,
+        asNavFor: '.single-property-gallery',
+    });
+});
+// News Carousel For 4 Column
+$('.news-carousel').each(function (){
+    var $this = $(this);
+    var $row = $this.attr("data-row") ? parseInt($this.attr("data-row"), 10) : 1;
+    $this.slick({
+        infinite: true,
+        arrows: true,
+        dots: false,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        rows: $row,
+        prevArrow: '<button class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+        nextArrow: '<button class="slick-next"><i class="fa fa-angle-right"></i></button>',
+        responsive: [
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 2,
                 }
-                $(this).toggleClass('show-submenu');
-            }
-        })
-
-        $(window).scroll(function() {
-            if(window.matchMedia('(min-width: 992px)').matches) {
-                var header = '.rt_nav_header.horizontal-layout';
-                if ($(window).scrollTop() >= 50) {
-                    $(header).addClass('fixed-on-scroll');
-                } else {
-                    $(header).removeClass('fixed-on-scroll');
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
                 }
-            }
-        });
+            },
+        ]
     });
-
-    /*================================
-    //          to-do list
-    ==================================*/
-
-    $(".todo_add_item").on('keypress', function(e) {
-
-        var code = (e.keyCode ? e.keyCode : e.which);
-
-        if (code == 13) {
-
-            var v = $(this).val();
-
-            var s = v.replace(/ +?/g, '');
-
-            if (s == "") {
-
-                return false;
-
-            } else {
-
-                $(".todo_content ul").append("<li><label><input type='checkbox'><i></i><span>" + v + "</span><a href='#' class='ti-trash'></a></label></li>");
-
-                $(this).val("");
-
-            }
-
-        }
-
-    });
-    $(".submit_list_btn").on('click', function(e) {
-
-        var v = $('.todo_add_item').val();
-
-        var s = v.replace(/ +?/g, '');
-
-        if (s == "") {
-
-            return false;
-
-        } else {
-
-            $(".todo_content ul").append("<li><label><input type='checkbox'><i></i><span>" + v + "</span><a href='#' class='ti-trash'></a></label></li>");
-
-            $('.todo_add_item').val("");
-
-        }
-
-    });
-
-    $(".todo_content a").on("click", function() {
-
-        var _li = $(this).parent().parent("li");
-
-        _li.addClass("remove").stop().delay(100).slideUp("fast", function() {
-
-            _li.remove();
-
-        });
-
-        return false;
-
-    });
-
-    // for dynamically created a tags
-
-    $(".todo_content").on('click', "a", function() {
-
-        var _li = $(this).parent().parent("li");
-
-        _li.addClass("remove").stop().delay(100).slideUp("fast", function() {
-
-            _li.remove();
-
-        });
-
-        return false;
-
-    });
-
-    /*================================
-    stickey Header
-    ==================================*/
-    $(window).on('scroll', function() {
-        var scroll = $(window).scrollTop(),
-            mainHeader = $('#sticky-header'),
-            mainHeaderHeight = mainHeader.innerHeight();
-
-        // console.log(mainHeader.innerHeight());
-        if (scroll > 1) {
-            $("#sticky-header").addClass("sticky-menu");
-        } else {
-            $("#sticky-header").removeClass("sticky-menu");
-        }
-    });
-    /*================================
-    Start Footer resizer
-    ==================================*/
-    var e = function() {
-        var e = (window.innerHeight > 0 ? window.innerHeight : this.screen.height) - 5;
-        (e -= 67) < 1 && (e = 1), e > 67 && $(".blank_page .main-content").css("min-height", e + "px")
-    };
-    $(window).ready(e), $(window).on("resize", e);
-
-    /*================================
-    form bootstrap validation
-    ==================================*/
-    $('[data-toggle="popover"]').popover()
-
-    /*------------- Start form Validation -------------*/
-    window.addEventListener('load', function() {
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.getElementsByClassName('needs-validation');
-        // Loop over them and prevent submission
-        var validation = Array.prototype.filter.call(forms, function(form) {
-            form.addEventListener('submit', function(event) {
-                if (form.checkValidity() === false) {
-                    event.preventDefault();
-                    event.stopPropagation();
+});
+// Agent Carousel For 4 Column
+$('.agent-carousel').each(function (){
+    var $this = $(this);
+    var $row = $this.attr("data-row") ? parseInt($this.attr("data-row"), 10) : 1;
+    $this.slick({
+        infinite: true,
+        arrows: true,
+        dots: false,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        rows: $row,
+        prevArrow: '<button class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+        nextArrow: '<button class="slick-next"><i class="fa fa-angle-right"></i></button>',
+        responsive: [
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 2,
                 }
-                form.classList.add('was-validated');
-            }, false);
-        });
-    }, false);
-
-    /*================================
-    Fullscreen Page
-    ==================================*/
-
-    if ($('#full-view').length) {
-
-        var requestFullscreen = function(ele) {
-            if (ele.requestFullscreen) {
-                ele.requestFullscreen();
-            } else if (ele.webkitRequestFullscreen) {
-                ele.webkitRequestFullscreen();
-            } else if (ele.mozRequestFullScreen) {
-                ele.mozRequestFullScreen();
-            } else if (ele.msRequestFullscreen) {
-                ele.msRequestFullscreen();
-            } else {
-                console.log('Fullscreen API is not supported.');
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+        ]
+    });
+});
+// Agent Carousel For 3 Column
+$('.agent-carousel-2').each(function (){
+    var $this = $(this);
+    var $row = $this.attr("data-row") ? parseInt($this.attr("data-row"), 10) : 1;
+    $this.slick({
+        infinite: true,
+        arrows: true,
+        dots: false,
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        rows: $row,
+        prevArrow: '<button class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+        nextArrow: '<button class="slick-next"><i class="fa fa-angle-right"></i></button>',
+        responsive: [
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+        ]
+    });
+});
+// Brand Carousel For 5 Column
+$('.brand-carousel').slick({
+    infinite: true,
+    arrows: false,
+    dots: false,
+    slidesToShow: 5,
+    slidesToScroll: 1,
+    responsive: [
+        {
+            breakpoint: 992,
+            settings: {
+                slidesToShow: 4,
             }
-        };
-
-        var exitFullscreen = function() {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            } else if (document.webkitExitFullscreen) {
-                document.webkitExitFullscreen();
-            } else if (document.mozCancelFullScreen) {
-                document.mozCancelFullScreen();
-            } else if (document.msExitFullscreen) {
-                document.msExitFullscreen();
-            } else {
-                console.log('Fullscreen API is not supported.');
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 3,
             }
-        };
-
-        var fsDocButton = document.getElementById('full-view');
-        var fsExitDocButton = document.getElementById('full-view-exit');
-
-        fsDocButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            requestFullscreen(document.documentElement);
-            $('body').addClass('expanded');
-        });
-
-        fsExitDocButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            exitFullscreen();
-            $('body').removeClass('expanded');
-        });
-    }
-
-    /*================================
-    slider-area background setting
-    ==================================*/
-    $('.settings-btn, .offset-close').on('click', function() {
-        $('.offset-area').toggleClass('show_hide');
-        $('.settings-btn').toggleClass('active');
-    });
-
-    /*================================
-    login form
-    ==================================*/
-    $('.form-gp input').on('focus', function() {
-        $(this).parent('.form-gp').addClass('focused');
-    });
-    $('.form-gp input').on('focusout', function() {
-        if ($(this).val().length === 0) {
-            $(this).parent('.form-gp').removeClass('focused');
-        }
-    });
-
-    /*======== Brand Slider =========*/
-
-    $("#mt_client .owl-carousel").owlCarousel({
-        loop: false,
-        margin: 24,
-        autoplay: false,
-        autoplayHoverPause: true,
-        autoplaySpeed: 1000,
-        dot: true,
-        smartSpeed:850,
-        responsive: {
-            0: {
-                items: 1,
-                dots: true
-            },
-            600: {
-                items: 3,
-                dots: true
-            },
-            1000: {
-                items: 5,
-                dots: true
-            },
-            1201: {
-                items: 5,
-                dots: true
+        },
+        {
+            breakpoint: 479,
+            settings: {
+                slidesToShow: 2,
             }
-        }
-    });
-    /*======== End Brand Slider =========*/
-    /*======== Team Section =========*/
-    $("#mt_team .owl-carousel").owlCarousel({
-        loop: true,
-        autoplay: true,
-        autoplayHoverPause: true,
-        autoplaySpeed: 1000,
-        smartSpeed:850,
-        responsive: {
-            0: {
-                items: 1,
-                dots: true
-            },
-            450: {
-                items: 2,
-                dots: true
-            },
-            500: {
-                items: 2,
-                dots: true
-            },
-            600: {
-                items: 2,
-                dots: true
-            },
-            1000: {
-                items: 3,
-                dots: true
-            },
-            1201: {
-                items: 3,
-                dots: true
+        },
+    ]
+});
+// Review Slider For 3 Column
+$('.review-slider').slick({
+    infinite: true,
+    arrows: true,
+    dots: false,
+    slidesToShow: 3,
+    slidesToScroll: 1,
+    focusOnSelect: true,
+    centerMode: true,
+    centerPadding: '0px',
+    prevArrow: '<button class="slick-prev"><i class="fa fa-angle-left"></i></button>',
+    nextArrow: '<button class="slick-next"><i class="fa fa-angle-right"></i></button>',
+    responsive: [
+        {
+            breakpoint: 992,
+            settings: {
+                slidesToShow: 1,
+                centerPadding: '200px',
             }
-        }
-    });
-
-    /*======== End Team Section =========*/
-    /*======== Testimonial Section =========*/
-
-    $("#mt_testimonial .owl-carousel").owlCarousel({
-        loop: false,
-        margin: 24,
-        autoplay: false,
-        autoplayHoverPause: true,
-        autoplaySpeed: 1000,
-        dot: true,
-        smartSpeed:850,
-        responsive: {
-            0: {
-                items: 1,
-                dots: true
-            },
-            600: {
-                items: 1,
-                dots: true
-            },
-            1000: {
-                items: 3,
-                dots: true
-            },
-            1201: {
-                items: 3,
-                dots: true
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 1,
             }
-        }
+        },
+    ]
+}); 
+
+// Window Load Function
+windows.on('load', function(){
+    // Map Property Slider
+    $('.map-property-slider').slick({
+        infinite: true,
+        arrows: false,
+        dots: false,
+        slidesToShow: 7,
+        slidesToScroll: 1,
+        focusOnSelect: true,
+        centerMode: true,
+        centerPadding: '0px',
+        responsive: [
+            {
+                breakpoint: 1500,
+                settings: {
+                    slidesToShow: 4,
+                }
+            },
+            {
+                breakpoint: 1199,
+                settings: {
+                    slidesToShow: 3,
+                }
+            },
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 479,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+        ]
     });
-
-    /*======== End Testimonial Section =========*/
-    /*======== Portfolio Detail 1 Section =========*/
-
-    $(".project_gallery .owl-carousel").owlCarousel({
-        center: true,
-        loop: true,
-        margin: 0,
-        autoplay: true,
-        autoplayTimeout: 5000,
-        autoplayHoverPause: true,
-        responsiveBaseElement: window,
-        responsiveClass: true,
-        responsive: {
-            0: {
-                items: 2,
-                nav: true
-            },
-            600: {
-                items: 2,
-                nav: false
-            },
-            1000: {
-                items: 2,
-                nav: true
-            },
-            1201: {
-                items: 2,
-                nav: true
-            }
-        }
-    });
-
-    /*======== End Portfolio Detail 1 Section =========*/
-
-    /*======== Portfolio Gallery 2 =========*/
-
-    $(".portfolio_gallery .owl-carousel").owlCarousel({
-        center: true,
-        loop: true,
-        margin: 0,
-        autoplay: true,
-        autoplayTimeout: 5000,
-        autoplayHoverPause: true,
-        responsiveBaseElement: window,
-        responsiveClass: true,
-        navText: ["<img src='images/arrow-left.png'>","<img src='images/arrow-right.png'>"],
-        responsive: {
-            0: {
-                items: 1,
-                nav: true
-            },
-            600: {
-                items: 1,
-                nav: true
-            },
-            1000: {
-                items: 1,
-                nav: true
-            },
-            1201: {
-                items: 1,
-                nav: true
-            }
-        }
-    });
-
-    /*======== End Portfolio Gallery2 =========*/
+});
+    
+/*--
+    Nice Select
+-----------------------------------*/
+$('.nice-select').niceSelect();
+    
+/*--
+    Youtube Background Video 
+-----------------------------------*/
+$(".player").YTPlayer();
+    
+/*--
+    MailChimp
+-----------------------------------*/
+$('#mc-form').ajaxChimp({
+    language: 'en',
+    callback: mailChimpResponse,
+    // ADD YOUR MAILCHIMP URL BELOW HERE!
+    url: 'http://devitems.us11.list-manage.com/subscribe/post?u=6bbb9b6f5827bd842d9640c82&amp;id=05d85f18ef'
 
 });
-/*======== End Doucument Ready Function =========*/
+function mailChimpResponse(resp) {
 
+    if (resp.result === 'success') {
+        $('.mailchimp-success').html('' + resp.msg).fadeIn(900);
+        $('.mailchimp-error').fadeOut(400);
 
+    } else if(resp.result === 'error') {
+        $('.mailchimp-error').html('' + resp.msg).fadeIn(900);
+    }  
+}
 
+/*--
+    Search Price Range
+-----------------------------------*/
+var $searchPriceRange = $('#search-price-range');
+$searchPriceRange.slider({
+    range: true,
+    min: 0,
+    max: 100000,
+    values: [ 12500, 75000 ],
+    slide: function( event, ui ) {
+        $searchPriceRange.find('.ui-slider-handle:eq(0)').html( '<span>' + '$' + ui.values[ 0 ] + '</span>');
+        $searchPriceRange.find('.ui-slider-handle:eq(1)').html( '<span>' + '$' + ui.values[ 1 ] + '</span>');
+    }
+});
+$searchPriceRange.find('.ui-slider-handle:eq(0)').html( '<span>' + '$' + $searchPriceRange.slider( "values", 0 ) + '</span>' );
+$searchPriceRange.find('.ui-slider-handle:eq(1)').html( '<span>' + '$' + $searchPriceRange.slider( "values", 1 ) + '</span>' );   
+
+/*--
+    Dropzone Upload
+-----------------------------------*/
+Dropzone.autoDiscover = false;
+$(".dropzone").dropzone({
+    url: "/file/post",
+    dictDefaultMessage: "<i class='pe-7s-cloud-upload'></i> Click here or drop files to upload",
+});
+    
+/*--
+    Add Property Tab Function
+-----------------------------------*/
+var $addPropertyTabList = $('.add-property-tab-list');
+$addPropertyTabList.on('click', 'a', function(){
+    var $this = $(this);
+    $this.parent('li').addClass('working').removeClass('done');
+    $this.parent('li').prevAll('li').addClass('done');
+    $this.parent('li').nextAll('li').removeClass('working done');
+});
+var $addPropertyTabNav = $('.add-property-tab-nav');
+$addPropertyTabNav.on('click', 'a', function(){
+    var $this = $(this);
+    var $thisTarget = $this.attr('href');
+    var $addPropertyTabList = $this.closest('.add-property-wrap').find('a[href="' + $thisTarget + '"]').parent('li');
+    console.log($thisTarget);
+    
+        $addPropertyTabList.addClass('working').removeClass('done');
+        $addPropertyTabList.prevAll('li').addClass('done');
+        $addPropertyTabList.nextAll('li').removeClass('working done');
+});
+    
+/*--
+    Login Register Custom Tab Toggle Function
+-----------------------------------*/
+var $registerToggle = $('.register-toggle');
+$registerToggle.on('click', function(e){
+    e.preventDefault();
+    var $this = $(this);
+    var $thisTarget = $this.attr('href');
+    var $loginRegisterTabList = $this.closest('#main-wrapper').find('a[href="' + $thisTarget + '"]');
+    var $loginRegisterTabPane = $this.closest('#main-wrapper').find('.tab-pane');
+    
+        $loginRegisterTabList.addClass('active');
+        $loginRegisterTabList.parent('li').prevAll('li').find('a').removeClass('active');
+        $loginRegisterTabList.parent('li').nextAll('li').find('a').removeClass('active');
+        $loginRegisterTabPane.removeClass('show active');
+        $($thisTarget).addClass('show active');
+});
+
+/*--
+    Google Map
+-----------------------------------*/
+
+// Google Map For Single Property Map
+$('.google-map').each(function(){
+    if($(this).length){
+        var $this = $(this);
+        var $lat = $this.data('lat');
+        var $long = $this.data('long');
+        function initialize() {
+            var mapOptions = {
+                zoom: 14,
+                scrollwheel: false,
+                center: new google.maps.LatLng($lat, $long)
+            };
+            var map = new google.maps.Map(document.getElementById('single-property-map'), mapOptions);
+            var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: 'assets/images/icons/map-marker-2.png',
+                map: map,
+                animation: google.maps.Animation.BOUNCE
+            });
+
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    }
+});
+// Google Map For Conatact Map
+$('.contact-map').each(function(){
+    if($(this).length){
+        var $this = $(this);
+        var $lat = $this.data('lat');
+        var $long = $this.data('long');
+        function initialize() {
+            var mapOptions = {
+                zoom: 14,
+                scrollwheel: false,
+                center: new google.maps.LatLng($lat, $long)
+            };
+            var map = new google.maps.Map(document.getElementById('contact-map'), mapOptions);
+            var marker = new google.maps.Marker({
+                position: map.getCenter(),
+                icon: 'assets/images/icons/map-marker-2.png',
+                map: map,
+                animation: google.maps.Animation.BOUNCE
+            });
+
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    }
+});
+
+/*--
+    Scroll Up
+-----------------------------------*/
+$.scrollUp({
+    easingType: 'linear',
+    scrollSpeed: 900,
+    animation: 'fade',
+    scrollText: '<i class="fa fa-angle-up"></i>',
+});
+
+/*--
+    Scroll Up
+-----------------------------------*/
+$('.gallery-popup').magnificPopup({
+    type: 'image',
+    gallery: {
+        enabled: true,
+    },
+});
+    
+    
+})(jQuery);	

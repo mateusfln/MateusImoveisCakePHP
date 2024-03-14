@@ -20,7 +20,6 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
-use Cake\ORM\TableRegistry;
 use Cake\View\Exception\MissingTemplateException;
 
 /**
@@ -46,6 +45,7 @@ class PagesController extends AppController
      */
     public function display(string ...$path): ?Response
     {
+        
         if (!$path) {
             return $this->redirect('/');
         }
@@ -61,7 +61,8 @@ class PagesController extends AppController
             $subpage = $path[1];
         }
 
-        $this->set(compact('page', 'subpage'));      
+        $this->set(compact('page', 'subpage'));
+        $this->viewBuilder()->setTheme('Frontend');      
 
         try {
             return $this->render(implode('/', $path));
@@ -71,5 +72,6 @@ class PagesController extends AppController
             }
             throw new NotFoundException();
         }
+        
     }
 }

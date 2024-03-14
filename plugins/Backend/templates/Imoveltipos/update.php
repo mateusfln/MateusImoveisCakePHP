@@ -13,7 +13,6 @@ $caracteristicasImoveltipos = $caracteristicasImoveltiposTable->find()->where(['
 foreach ($caracteristicasImoveltipos as $imoveltipos) {
     $arrImoveltipos[] = $imoveltipos->caracteristica_id;
 }
-
 $imoveltiposTable = TableRegistry::getTableLocator()->get('Imoveltipos');
 $imoveltipo = $imoveltiposTable->get($_GET['id']);
 ?>

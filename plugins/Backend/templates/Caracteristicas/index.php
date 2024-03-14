@@ -1,12 +1,6 @@
 <?php
-use App\Model\Table\CaracteristicasTable;
 $campos = array('ID','NOME','ATIVO','CRIADO', 'MODIFICADO', 'CRIADOR ID', 'MODIFICADOR ID');
 
-$caracteristicas = new CaracteristicasTable();
-$caracteristicas = $caracteristicas->find();
-
-
-//dd($_POST);
 ?>
     
     <!--==================================*
@@ -78,7 +72,12 @@ $caracteristicas = $caracteristicas->find();
                                             <td>
                                                 <ul class="d-flex justify-content-center">
                                                     <li class="mr-3"><a href="caracteristicas/update?id=<?= $caracteristica['id']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
-                                                    <?= $this->Form->create(null, ['method' => 'post', 'action' => 'https://micake.local/admin/caracteristicas/delete/'.$caracteristica['id']]) ?>
+                                                    <?= $this->Form->create(null, [
+                                                                    'url' => [
+                                                                        'controller' => 'Caracteristicas',
+                                                                        'action' => 'delete',
+                                                                    ],
+                                                                ]) ?>
                                                         <input type="hidden" name="delete_id" value="<?=$caracteristica['id']?>">
                                                         <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>
                                                     <?= $this->Form->end() ?>

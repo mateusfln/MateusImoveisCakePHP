@@ -2,75 +2,66 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+
 use App\Model\Entity\Imoveltipo;
 use App\Model\Table\CaracteristicasImoveltiposTable;
+use App\Model\Table\ImoveltiposTable;
+use Cake\Http\Response;
 use Cake\ORM\TableRegistry;
 
 /**
- * Imoveltipo Controller
+ * Classe Controladora de Imoveltipo
  *
  * @property \App\Model\Table\ImoveltiposTable $Imoveltipo
  */
-
-
 class ImoveltiposController extends AppController
 {
     /**
-     * Cria um registro na tabela Imoveltipo de acordo com os dados fornecidos
-     * 
+     * Método que envia para a view uma variavel "$imoveltipos" contendo os registros da tabela Imoveltipos
+     * @return void 
      */
-    public function index()
+    public function index(): void
     {
-        // echo'index de Imoveltipo';
-        // die;
-        // $Imoveltipo = $this->Imoveltipo->find();
-        // $this->set(compact('Imoveltipo'));
+        $imoveltipos = new ImoveltiposTable();
+        $imoveltipos = $imoveltipos->find();
+        $this->set(compact('imoveltipos'));
     }
+
     /**
-     * Cria um registro na tabela Imoveltipo de acordo com os dados fornecidos
-     * 
-     * @param Imoveltipo $Imoveltipo Objeto Imoveltipo com dados a serem preenchidos
+     * Cria um registro na tabela Imoveltipo de acordo com os dados fornecidos na view
+     * @return void
      */
-    public function add()
+    public function add(): void
     {
-        if (isset($_POST['nome']))
-        {
-            $this->addRegistro(); 
+        if (isset($_POST['nome'])) {
+            $this->addRegistro();
         }
     }
 
     /**
      * Retorna um registro na tabela Imoveltipo de acordo com os dados fornecidos
-     * 
-     * @param int $id   Código do Imoveltipo
-     * @throws \Exception
      */
-    public function read() 
+    public function read()
     {
-        // echo'index de Imoveltipo '.$this->request->getParam('id');
-        // die;
 
-        // $Imoveltipo = $this->Imoveltipo->get($id);
-        // $this->set('Imoveltipo', $Imoveltipo);
     }
-    
+
     /**
      * Edita um registro na tabela Imoveltipo de acordo com os dados fornecidos
-     * 
-   
+     * @return Response|null
      */
-    public function update()
+    public function update(): Response|null
     {
-        if(!empty($_POST['nome'])){
-        $hoje = new \DateTimeImmutable();
+        if (!empty($_POST['nome'])) {
+            $hoje = new \DateTimeImmutable();
             $tableImoveltipos = TableRegistry::getTableLocator()->get('Imoveltipos');
-            
+
             $imoveltipoEntity = $tableImoveltipos->newEmptyEntity();
             $imoveltipoEntity->id = $_GET['id'];
             $imoveltipoEntity->nome = $_POST['nome'];
             $imoveltipoEntity->ativo = 0;
-            if(!empty($_POST['ativo'])){
-                $imoveltipoEntity->ativo = 1;    
+            if (!empty($_POST['ativo'])) {
+                $imoveltipoEntity->ativo = 1;
             }
             $imoveltipoEntity->criado = $hoje;
             $imoveltipoEntity->modificado = $hoje;
@@ -85,7 +76,7 @@ class ImoveltiposController extends AppController
 
                 $tableCaracteristicaImoveltipo = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
                 $caracteristicasImoveltipos = $tableCaracteristicaImoveltipo->newEmptyEntity();
-    
+
                 $caracteristicasImoveltipos->imoveltipo_id = $imoveltipoEntity->id;
                 $caracteristicasImoveltipos->caracteristica_id = $caracteristica;
                 $caracteristicasImoveltipos->ativo = true;
@@ -98,35 +89,35 @@ class ImoveltiposController extends AppController
             }
             return $this->redirect('admin/imoveltipos');
         }
+        return null;
 
-        
     }
-   
+
     /**
      * Deleta um registro na tabela Imoveltipo de acordo com os dados fornecidos
-     * 
-     * @throws \Exception
-     * @param int $id
-     * @return void
+     * @return Response|null
      */
-    public function delete(int $id)
+    public function delete(): Response|null
     {
 
-        $this->request->allowMethod(['post', 'delete']);
-        $Imoveltipo = $this->Imoveltipo->get($id);
-        if ($this->Imoveltipo->delete($Imoveltipo)) {
-            $this->Flash->success(__('Imóvel excluído com sucesso.'));
-        } else {
-            $this->Flash->error(__('Erro ao excluir o imóvel.'));
+        if (!empty($_POST['delete_id'])) {
+            $imoveltiposTable = new ImoveltiposTable();
+            $imoveltiposTable->deleteAll(['id' => $_POST['delete_id']]);
         }
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect('admin/Imoveltipos');
     }
 
-    public function addRegistro()
+    /**
+     * método que fornece a lógica de adição de um novo registro de Imoveltipos
+     * @return Response|null
+     */
+    public function addRegistro(): Response|null
     {
+        if (!empty($_POST['nome']) && !empty($_POST['caracteristicas'])) {
+
             $hoje = new \DateTimeImmutable();
             $tableImoveltipos = TableRegistry::getTableLocator()->get('Imoveltipos');
-            
+
             $imoveltipoEntity = $tableImoveltipos->newEmptyEntity();
             $imoveltipoEntity->nome = $_POST['nome'];
             $imoveltipoEntity->ativo = true;
@@ -140,7 +131,7 @@ class ImoveltiposController extends AppController
 
                 $tableCaracteristicaImoveltipo = TableRegistry::getTableLocator()->get('CaracteristicasImoveltipos');
                 $caracteristicasImoveltipos = $tableCaracteristicaImoveltipo->newEmptyEntity();
-    
+
                 $caracteristicasImoveltipos->imoveltipo_id = $imoveltipoEntity->id;
                 $caracteristicasImoveltipos->caracteristica_id = $caracteristica;
                 $caracteristicasImoveltipos->ativo = true;
@@ -152,7 +143,9 @@ class ImoveltiposController extends AppController
                 $tableCaracteristicaImoveltipo->save($caracteristicasImoveltipos);
             }
             return $this->redirect('admin/imoveltipos');
+        }
+        return null;
     }
-    
+
 }
 

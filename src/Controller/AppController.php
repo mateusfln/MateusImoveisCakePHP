@@ -31,7 +31,8 @@ class AppController extends Controller
 
     public function beforeRender(\Cake\Event\EventInterface $event)
     {
-        $this->viewBuilder()->setTheme('Backend');
+        //$this->viewBuilder()->setTheme('Backend');
+        $this->viewBuilder()->setTheme('Frontend');
     }
     /**
      * Initialization hook method.

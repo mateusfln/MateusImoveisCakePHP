@@ -2,43 +2,41 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-use App\Model\Entity\Pessoa;
+
+use App\Model\Table\PessoasTable;
+use Cake\Http\Response;
 use Cake\ORM\TableRegistry;
 
 /**
- * Pessoas Controller
+ * Classe Controladora de Pessoas
  *
  * @property \App\Model\Table\PessoasTable $Pessoas
  */
-
-
 class PessoasController extends AppController
 {
     /**
-     * Cria um registro na tabela Pessoas de acordo com os dados fornecidos
-     * 
+     * Método que envia para a view uma variavel "$pessoas" contendo os registros da tabela Pessoas
+     * @return void 
      */
-    public function index()
+    public function index(): void
     {
-        // echo'index de Pessoas';
-        // die;
-        // $Pessoas = $this->Pessoas->find();
-        // $this->set(compact('Pessoas'));
+        $pessoas = new PessoasTable();
+        $pessoas = $pessoas->find();
+        $this->set(compact('pessoas'));
     }
+
     /**
-     * Cria um registro na tabela Pessoas de acordo com os dados fornecidos
-     * 
-     * @param Pessoa $Pessoas Objeto Pessoas com dados a serem preenchidos
+     * Cria um registro na tabela Pessoas de acordo com os dados fornecidos na view
+     * @return Response|null
      */
-    public function add()
+    public function add(): Response|null
     {
-        
-        if (!empty($_POST['nome']) && !empty($_POST['cpf']) && !empty($_POST['login']) && !empty($_POST['senha']))
-        {
+
+        if (!empty($_POST['nome']) && !empty($_POST['cpf']) && !empty($_POST['login']) && !empty($_POST['senha'])) {
             $hoje = new \DateTimeImmutable();
             $tablePessoas = TableRegistry::getTableLocator()->get('Pessoas');
-            
             $pessoaEntity = $tablePessoas->newEmptyEntity();
+
             $pessoaEntity->nome = $_POST['nome'];
             $pessoaEntity->cpf = $_POST['cpf'];
             $pessoaEntity->login = $_POST['login'];
@@ -48,40 +46,33 @@ class PessoasController extends AppController
             $pessoaEntity->modificado = $hoje;
             $pessoaEntity->criador_id = 1;
             $pessoaEntity->modificador_id = 1;
-            $tablePessoas->save($pessoaEntity); 
+
+            $tablePessoas->save($pessoaEntity);
             return $this->redirect('admin/pessoas');
         }
-        
+        return null;
+
     }
 
     /**
      * Retorna um registro na tabela Pessoas de acordo com os dados fornecidos
-     * 
-     * @param int $id   Código do Pessoas
-     * @throws \Exception
      */
-    public function read() 
+    public function read()
     {
-        // echo'index de Pessoas '.$this->request->getParam('id');
-        // die;
 
-        // $Pessoas = $this->Pessoas->get($id);
-        // $this->set('Pessoas', $Pessoas);
     }
-    
+
     /**
      * Edita um registro na tabela Pessoas de acordo com os dados fornecidos
-     * 
-   
+     * @return Response|null
      */
-    public function update()
+    public function update(): Response|null
     {
 
-        if (!empty($_POST['nome']) && !empty($_POST['cpf']) && !empty($_POST['login']) && !empty($_POST['senha']))
-        {
+        if (!empty($_POST['nome']) && !empty($_POST['cpf']) && !empty($_POST['login']) && !empty($_POST['senha'])) {
             $hoje = new \DateTimeImmutable();
             $tablePessoas = TableRegistry::getTableLocator()->get('Pessoas');
-            
+
             $pessoaEntity = $tablePessoas->newEmptyEntity();
 
             $pessoaEntity->id = $_GET['id'];
@@ -90,33 +81,31 @@ class PessoasController extends AppController
             $pessoaEntity->login = $_POST['login'];
             $pessoaEntity->senha = $_POST['senha'];
             $pessoaEntity->ativo = 0;
-            if(!empty($_POST['ativo'])){
-                $pessoaEntity->ativo = 1;    
+            if (!empty($_POST['ativo'])) {
+                $pessoaEntity->ativo = 1;
             }
             $pessoaEntity->criado = $hoje;
             $pessoaEntity->modificado = $hoje;
             $pessoaEntity->criador_id = 1;
             $pessoaEntity->modificador_id = 1;
-            $tablePessoas->save($pessoaEntity); 
+            $tablePessoas->save($pessoaEntity);
             return $this->redirect('admin/pessoas');
         }
+        return null;
     }
-   
-    /**
-     * Deleta um registro na tabela Pessoas de acordo com os dados fornecidos
-     * 
-     */
-    public function delete()
-    {
 
-        // $this->request->allowMethod(['post', 'delete']);
-        // $Pessoas = $this->Pessoas->get($id);
-        // if ($this->Pessoas->delete($Pessoas)) {
-        //     $this->Flash->success(__('Imóvel excluído com sucesso.'));
-        // } else {
-        //     $this->Flash->error(__('Erro ao excluir o imóvel.'));
-        // }
-        // return $this->redirect(['action' => 'index']);
+    /**
+     * Deleta um registro na tabela Imovel de acordo com os dados fornecidos
+     * @return Response|null
+     */
+    public function delete(): Response|null
+    {
+        if (!empty($_POST['delete_id'])) {
+            $pessoasTable = new PessoasTable();
+            $pessoasTable->deleteAll(['id' => $_POST['delete_id']]);
+            return $this->redirect('admin/pessoas');
+        }
+        return null;
     }
-    
+
 }

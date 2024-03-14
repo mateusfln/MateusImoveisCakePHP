@@ -23,5 +23,10 @@ return function (RouteBuilder $routes): void {
         
         $builder->fallbacks();
     });
+    $routes->scope('/', function (RouteBuilder $builder): void {
+        
+        $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+       
+    });
 
 };

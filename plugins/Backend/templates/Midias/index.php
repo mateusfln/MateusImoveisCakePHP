@@ -1,10 +1,6 @@
 
 <?php
-use App\Model\Table\MidiasTable;
 $campos = array('ID','IMOVEL ID', 'IDENTIFICACAO', 'NOME DISCO', 'CAPA','ATIVO','CRIADO', 'MODIFICADO', 'CRIADOR ID', 'MODIFICADOR ID');
-
-$midias = new MidiasTable();
-$midias = $midias->find();
 ?>
         <!--==================================*
                    Main Section
@@ -78,10 +74,15 @@ $midias = $midias->find();
                                             <td>
                                                 <ul class="d-flex justify-content-center">
                                                     <li class="mr-3"><a href="midias/update?id=<?=$midia['id']?>" class="btn btn-inverse-warning"><i class="bi bi-pencil-square mr-1"></i>Edit</a></li>
-                                                    <form method="POST">
+                                                    <?= $this->Form->create(null, [
+                                                                    'url' => [
+                                                                        'controller' => 'Midias',
+                                                                        'action' => 'delete',
+                                                                    ],
+                                                                ]) ?>
                                                         <input type="hidden" name="delete_id" value="<?=$midia['id']?>">
                                                         <li class="mr-3"><button type="submit" class="btn btn-inverse-danger"><i class="bi bi-trash mr-1"></i>Delete</button></li>
-                                                    </form>
+                                                    <?= $this->Form->end() ?>
                                                 </ul>
                                             </td>
                                         </tr>

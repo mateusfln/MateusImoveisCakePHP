@@ -2,37 +2,34 @@
 declare(strict_types=1);
 
 namespace App\Controller;
-use App\Model\Entity\Caracteristica;
 use App\Model\Table\CaracteristicasImoveltiposTable;
+use App\Model\Table\CaracteristicasTable;
+use Cake\Http\Response;
 use Cake\ORM\TableRegistry;
 
 /**
- * Caracteristicas Controller
+ * Classe Controladora de Caracteristicas
  *
- * @property \App\Model\Table\CaracteristicasTable $caracteristicas
+ * @property \App\Model\Table\CaracteristicasTable $Caracteristicas
  */
-
-
 class CaracteristicasController extends AppController
 {
     /**
-     * Cria um registro na tabela Caracteristica de acordo com os dados fornecidos
-     * 
+     * Método que envia para a view uma variavel "$caracteristicas" contendo os registros da tabela caracteristica
+     * @return void 
      */
-    public function index()
+    public function index() : void
     {
-        // echo'index de caracteristicas';
-        // die;
-        // $Caracteristica = $this->Caracteristicas->find();
-        // $this->set(compact('Caracteristica'));
+        $caracteristicas = new CaracteristicasTable();
+        $caracteristicas = $caracteristicas->find();
+        $this->set(compact('caracteristicas'));
     }
     
     /**
-     * Cria um registro na tabela Caracteristica de acordo com os dados fornecidos
-     * 
-     * @param Caracteristica $caracteristica Objeto Caracteristica com dados a serem preenchidos
+     * Cria um registro na tabela Caracteristica de acordo com os dados fornecidos na view
+     * @return void 
      */
-    public function add()
+    public function add() : void
     {
         if (isset($_POST['nome']))
         {
@@ -43,33 +40,24 @@ class CaracteristicasController extends AppController
 
     /**
      * Retorna um registro na tabela Caracteristica de acordo com os dados fornecidos
-     * 
-     * @param int $id   Código do Caracteristica
-     * @throws \Exception
      */
     public function read() 
     {
-        // echo'index de caracteristicas '.$this->request->getParam('id');
-        // die;
-
-        // $caracteristica = $this->Caracteristica->get($id);
-        // $this->set('caracteristica', $caracteristica);
+        
     }
     
     /**
-     * Edita um registro na tabela Caracteristica de acordo com os dados fornecidos
-     * 
-   
+     * Edita um registro na tabela Caracteristica de acordo com os dados fornecidos na view
+     * @return Response|null
      */
-    public function update()
+    public function update() : Response|null
     {
         if(!empty($_POST['nome'])){
 
-        
             $hoje = new \DateTimeImmutable();
             $tableCaracteristicas = TableRegistry::getTableLocator()->get('Caracteristicas');
-            
             $caracteristicaEntity = $tableCaracteristicas->newEmptyEntity();
+
             $caracteristicaEntity->id = $_GET['id'];
             $caracteristicaEntity->nome = $_POST['nome'];
             $caracteristicaEntity->ativo = 0;
@@ -82,9 +70,8 @@ class CaracteristicasController extends AppController
             $caracteristicaEntity->modificador_id = 1;
             $tableCaracteristicas->save($caracteristicaEntity);
 
-
-             $caracteristicasImoveltiposTable = new CaracteristicasImoveltiposTable();
-             $caracteristicasImoveltiposTable->deleteAll(['caracteristica_id' => $caracteristicaEntity->id]);
+            $caracteristicasImoveltiposTable = new CaracteristicasImoveltiposTable();
+            $caracteristicasImoveltiposTable->deleteAll(['caracteristica_id' => $caracteristicaEntity->id]);
 
             foreach ($_POST['imoveltipos'] as $imovel) {
 
@@ -103,33 +90,32 @@ class CaracteristicasController extends AppController
             }
             return $this->redirect('admin/caracteristicas');
         }
+        return null;
     }
    
     /**
-     * Deleta um registro na tabela Caracteristica de acordo com os dados fornecidos
-     * 
-     * @throws \Exception
-     * @param int $id
-     * @return void
+     * Deleta um registro na tabela Caracteristica de acordo com os dados fornecidos na view
+     * @return Response|null
      */
-    public function delete(int $id)
+    public function delete() : Response|null
     {
 
-        // if (isset($_POST['delete_id']))
-        // {
-        //     $entity = $this->Caracteristica->get($id);
-        //     $this->Caracteristica->delete($entity); 
-        // }
-        // return $this->redirect('admin/caracteristicas');
-        
+        if(!empty($_POST['delete_id'])){
+            $caracteristicasTable = new CaracteristicasTable();
+            $caracteristicasTable->deleteAll(['id' => $_POST['delete_id']]);
+            return $this->redirect('admin/Caracteristicas');
+        }
+        return null;
     }
     
     /**
      * método que fornece a lógica de adição de um novo registro de caracteristicas
-     * 
+     * @return Response|null
      */
-    public function addRegistro()
+    public function addRegistro() : Response|null
     {
+        if(!empty($_POST['nome']) && !empty($_POST['imoveltipos'])){
+
             $hoje = new \DateTimeImmutable();
             $tableCaracteristicas = TableRegistry::getTableLocator()->get('Caracteristicas');
             
@@ -140,6 +126,7 @@ class CaracteristicasController extends AppController
             $caracteristicaEntity->modificado = $hoje;
             $caracteristicaEntity->criador_id = 1;
             $caracteristicaEntity->modificador_id = 1;
+            
             $tableCaracteristicas->save($caracteristicaEntity);
 
             foreach ($_POST['imoveltipos'] as $imovel) {
@@ -158,5 +145,7 @@ class CaracteristicasController extends AppController
                 $tableCaracteristicaImoveltipo->save($caracteristicasImoveltipos);
             }
             return $this->redirect('admin/caracteristicas');
+        }
+        return null;
     }
 }
